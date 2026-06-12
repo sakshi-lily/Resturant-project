@@ -1,11 +1,13 @@
 import express from 'express';
 import { getReservations, createReservation, updateReservationStatus, deleteReservation } from '../controllers/reservationController.js';
+import { protect, admin } from '../middleware/authMiddleware.js';
 
 const router = express.Router();
 
-router.get('/', getReservations);
+router.get('/', protect, admin, getReservations);
 router.post('/', createReservation);
-router.put('/:id', updateReservationStatus);
-router.delete('/:id', deleteReservation);
+router.put('/:id', protect, admin, updateReservationStatus);
+router.delete('/:id', protect, admin, deleteReservation);
 
 export default router;
+

@@ -1,6 +1,8 @@
 import React, { useState, useEffect } from 'react';
 import { Star, MessageSquare, Plus, CheckCircle } from 'lucide-react';
 import GlassModal from '../components/GlassModal';
+import { API_URL } from '../config';
+
 
 export const Reviews = () => {
   const [reviews, setReviews] = useState([]);
@@ -17,7 +19,8 @@ export const Reviews = () => {
   const [formStatus, setFormStatus] = useState('idle'); // idle, loading, success, error
 
   const fetchReviews = () => {
-    fetch('http://localhost:5000/api/reviews?approvedOnly=true')
+    fetch(`${API_URL}/reviews?approvedOnly=true`)
+
       .then(res => res.json())
       .then(data => {
         setReviews(data);
@@ -43,7 +46,8 @@ export const Reviews = () => {
     setFormStatus('loading');
     
     try {
-      const response = await fetch('http://localhost:5000/api/reviews', {
+      const response = await fetch(`${API_URL}/reviews`, {
+
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',

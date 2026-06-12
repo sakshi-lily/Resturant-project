@@ -1,12 +1,18 @@
 import React, { useState, useEffect } from 'react';
 import { BarChart3, Calendar, Utensils, MessageSquare, Mail, Check, X, Trash2, Plus, Edit3, Image, ShieldAlert } from 'lucide-react';
 import GlassModal from '../components/GlassModal';
+import { API_URL } from '../config';
+import { useAuth } from '../context/AuthContext';
+
+
 
 export const AdminDashboard = () => {
   const [activeTab, setActiveTab] = useState('bookings'); // bookings, menu, offers, reviews, subscribers
+  const { token } = useAuth();
   
   // Data States
   const [bookings, setBookings] = useState([]);
+
   const [menuItems, setMenuItems] = useState([]);
   const [reviews, setReviews] = useState([]);
   const [offers, setOffers] = useState([]);
@@ -39,14 +45,17 @@ export const AdminDashboard = () => {
   // Fetch all backend data
   const fetchData = async () => {
     setLoading(true);
+    const headers = { 'Authorization': `Bearer ${token}` };
     try {
       const [bookingsRes, menuRes, reviewsRes, offersRes, subsRes] = await Promise.all([
-        fetch('http://localhost:5000/api/reservations'),
-        fetch('http://localhost:5000/api/menu'),
-        fetch('http://localhost:5000/api/reviews'),
-        fetch('http://localhost:5000/api/offers'),
-        fetch('http://localhost:5000/api/subscribers')
+        fetch(`${API_URL}/reservations`, { headers }),
+        fetch(`${API_URL}/menu`, { headers }),
+        fetch(`${API_URL}/reviews`, { headers }),
+        fetch(`${API_URL}/offers`, { headers }),
+        fetch(`${API_URL}/subscribers`, { headers })
       ]);
+
+
 
       const [bookingsData, menuData, reviewsData, offersData, subsData] = await Promise.all([
         bookingsRes.json(),
@@ -75,11 +84,16 @@ export const AdminDashboard = () => {
   // Update Reservation Status
   const handleUpdateBookingStatus = async (id, status) => {
     try {
-      const res = await fetch(`http://localhost:5000/api/reservations/${id}`, {
+      const res = await fetch(`${API_URL}/reservations/${id}`, {
         method: 'PUT',
-        headers: { 'Content-Type': 'application/json' },
+        headers: { 
+          'Content-Type': 'application/json',
+          'Authorization': `Bearer ${token}`
+        },
         body: JSON.stringify({ status })
       });
+
+
       if (res.ok) {
         setBookings(prev => prev.map(b => b._id === id ? { ...b, status } : b));
       }
@@ -92,7 +106,12 @@ export const AdminDashboard = () => {
   const handleDeleteBooking = async (id) => {
     if (!window.confirm('Delete this reservation?')) return;
     try {
-      const res = await fetch(`http://localhost:5000/api/reservations/${id}`, { method: 'DELETE' });
+      const res = await fetch(`${API_URL}/reservations/${id}`, { 
+        method: 'DELETE',
+        headers: { 'Authorization': `Bearer ${token}` }
+      });
+
+
       if (res.ok) {
         setBookings(prev => prev.filter(b => b._id !== id));
       }
@@ -105,7 +124,12 @@ export const AdminDashboard = () => {
   const handleDeleteSubscriber = async (id) => {
     if (!window.confirm('Remove subscriber?')) return;
     try {
-      const res = await fetch(`http://localhost:5000/api/subscribers/${id}`, { method: 'DELETE' });
+      const res = await fetch(`${API_URL}/subscribers/${id}`, { 
+        method: 'DELETE',
+        headers: { 'Authorization': `Bearer ${token}` }
+      });
+
+
       if (res.ok) {
         setSubscribers(prev => prev.filter(s => s._id !== id));
       }
@@ -117,11 +141,16 @@ export const AdminDashboard = () => {
   // Toggle review moderation status
   const handleToggleReviewApproval = async (id, currentStatus) => {
     try {
-      const res = await fetch(`http://localhost:5000/api/reviews/${id}`, {
+      const res = await fetch(`${API_URL}/reviews/${id}`, {
         method: 'PUT',
-        headers: { 'Content-Type': 'application/json' },
+        headers: { 
+          'Content-Type': 'application/json',
+          'Authorization': `Bearer ${token}`
+        },
         body: JSON.stringify({ isApproved: !currentStatus })
       });
+
+
       if (res.ok) {
         setReviews(prev => prev.map(r => r._id === id ? { ...r, isApproved: !currentStatus } : r));
       }
@@ -134,7 +163,12 @@ export const AdminDashboard = () => {
   const handleDeleteReview = async (id) => {
     if (!window.confirm('Permanently delete review?')) return;
     try {
-      const res = await fetch(`http://localhost:5000/api/reviews/${id}`, { method: 'DELETE' });
+      const res = await fetch(`${API_URL}/reviews/${id}`, { 
+        method: 'DELETE',
+        headers: { 'Authorization': `Bearer ${token}` }
+      });
+
+
       if (res.ok) {
         setReviews(prev => prev.filter(r => r._id !== id));
       }
@@ -146,11 +180,16 @@ export const AdminDashboard = () => {
   // Toggle Offer Activation
   const handleToggleOffer = async (id, currentStatus) => {
     try {
-      const res = await fetch(`http://localhost:5000/api/offers/${id}`, {
+      const res = await fetch(`${API_URL}/offers/${id}`, {
         method: 'PUT',
-        headers: { 'Content-Type': 'application/json' },
+        headers: { 
+          'Content-Type': 'application/json',
+          'Authorization': `Bearer ${token}`
+        },
         body: JSON.stringify({ isActive: !currentStatus })
       });
+
+
       if (res.ok) {
         setOffers(prev => prev.map(o => o._id === id ? { ...o, isActive: !currentStatus } : o));
       }
@@ -163,7 +202,12 @@ export const AdminDashboard = () => {
   const handleDeleteOffer = async (id) => {
     if (!window.confirm('Delete offer banner?')) return;
     try {
-      const res = await fetch(`http://localhost:5000/api/offers/${id}`, { method: 'DELETE' });
+      const res = await fetch(`${API_URL}/offers/${id}`, { 
+        method: 'DELETE',
+        headers: { 'Authorization': `Bearer ${token}` }
+      });
+
+
       if (res.ok) {
         setOffers(prev => prev.filter(o => o._id !== id));
       }
@@ -176,8 +220,9 @@ export const AdminDashboard = () => {
   const handleMenuSubmit = async (e) => {
     e.preventDefault();
     const url = editingItem 
-      ? `http://localhost:5000/api/menu/${editingItem._id}` 
-      : 'http://localhost:5000/api/menu';
+      ? `${API_URL}/menu/${editingItem._id}` 
+      : `${API_URL}/menu`;
+
     const method = editingItem ? 'PUT' : 'POST';
 
     const formattedForm = {
@@ -189,9 +234,13 @@ export const AdminDashboard = () => {
     try {
       const res = await fetch(url, {
         method,
-        headers: { 'Content-Type': 'application/json' },
+        headers: { 
+          'Content-Type': 'application/json',
+          'Authorization': `Bearer ${token}`
+        },
         body: JSON.stringify(formattedForm)
       });
+
       if (res.ok) {
         fetchData();
         setIsMenuModalOpen(false);
@@ -215,11 +264,16 @@ export const AdminDashboard = () => {
   const handleOfferSubmit = async (e) => {
     e.preventDefault();
     try {
-      const res = await fetch('http://localhost:5000/api/offers', {
+      const res = await fetch(`${API_URL}/offers`, {
         method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
+        headers: { 
+          'Content-Type': 'application/json',
+          'Authorization': `Bearer ${token}`
+        },
         body: JSON.stringify(offerForm)
       });
+
+
       if (res.ok) {
         fetchData();
         setIsOfferModalOpen(false);
@@ -252,7 +306,12 @@ export const AdminDashboard = () => {
   const handleDeleteMenuItem = async (id) => {
     if (!window.confirm('Permanently delete this dish from menu list?')) return;
     try {
-      const res = await fetch(`http://localhost:5000/api/menu/${id}`, { method: 'DELETE' });
+      const res = await fetch(`${API_URL}/menu/${id}`, { 
+        method: 'DELETE',
+        headers: { 'Authorization': `Bearer ${token}` }
+      });
+
+
       if (res.ok) {
         setMenuItems(prev => prev.filter(m => m._id !== id));
       }

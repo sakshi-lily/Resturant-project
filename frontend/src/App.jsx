@@ -4,6 +4,7 @@ import { Calendar } from 'lucide-react';
 
 // Providers
 import { ToastProvider } from './context/ToastContext';
+import { AuthProvider } from './context/AuthContext';
 
 // Reusable Layouts
 import Navbar from './components/Navbar';
@@ -18,6 +19,12 @@ import Reservation from './pages/Reservation';
 import Reviews from './pages/Reviews';
 import Contact from './pages/Contact';
 import AdminDashboard from './pages/AdminDashboard';
+import Login from './pages/Login';
+import Register from './pages/Register';
+
+// Route Guards
+import ProtectedRoute from './components/ProtectedRoute';
+
 
 // Scroll To Top on page navigation
 const ScrollToTop = () => {
@@ -78,34 +85,43 @@ const StickyMobileCTA = () => {
 function App() {
   return (
     <ToastProvider>
-      <BrowserRouter>
-        <ScrollToTop />
-        
-        {/* Shared Navigation Header */}
-        <Navbar />
-        
-        {/* Route Switcher */}
-        <main style={{ minHeight: 'calc(100vh - 120px)' }}>
-          <Routes>
-            <Route path="/" element={<Home />} />
-            <Route path="/menu" element={<Menu />} />
-            <Route path="/about" element={<About />} />
-            <Route path="/gallery" element={<Gallery />} />
-            <Route path="/reservation" element={<Reservation />} />
-            <Route path="/reviews" element={<Reviews />} />
-            <Route path="/contact" element={<Contact />} />
-            <Route path="/admin" element={<AdminDashboard />} />
-          </Routes>
-        </main>
-        
-        {/* Shared Footer */}
-        <Footer />
-        
-        {/* Floating CTA */}
-        <StickyMobileCTA />
-      </BrowserRouter>
+      <AuthProvider>
+        <BrowserRouter>
+          <ScrollToTop />
+          
+          {/* Shared Navigation Header */}
+          <Navbar />
+          
+          {/* Route Switcher */}
+          <main style={{ minHeight: 'calc(100vh - 120px)' }}>
+            <Routes>
+              <Route path="/" element={<Home />} />
+              <Route path="/menu" element={<Menu />} />
+              <Route path="/about" element={<About />} />
+              <Route path="/gallery" element={<Gallery />} />
+              <Route path="/reservation" element={<Reservation />} />
+              <Route path="/reviews" element={<Reviews />} />
+              <Route path="/contact" element={<Contact />} />
+              <Route path="/login" element={<Login />} />
+              <Route path="/register" element={<Register />} />
+              <Route path="/admin" element={
+                <ProtectedRoute>
+                  <AdminDashboard />
+                </ProtectedRoute>
+              } />
+            </Routes>
+          </main>
+          
+          {/* Shared Footer */}
+          <Footer />
+          
+          {/* Floating CTA */}
+          <StickyMobileCTA />
+        </BrowserRouter>
+      </AuthProvider>
     </ToastProvider>
   );
 }
+
 
 export default App;

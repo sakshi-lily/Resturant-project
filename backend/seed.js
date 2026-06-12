@@ -3,12 +3,15 @@ import dotenv from 'dotenv';
 import fs from 'fs';
 import path from 'path';
 import { fileURLToPath } from 'url';
+import bcrypt from 'bcryptjs';
 
 import MenuItem from './models/MenuItem.js';
 import Review from './models/Review.js';
 import Offer from './models/Offer.js';
 import Reservation from './models/Reservation.js';
 import Subscriber from './models/Subscriber.js';
+import User from './models/User.js';
+
 
 dotenv.config();
 
@@ -135,7 +138,20 @@ const seedJSON = () => {
     fs.mkdirSync(dir, { recursive: true });
   }
 
+  const salt = bcrypt.genSaltSync(10);
+  const hashedAdminPassword = bcrypt.hashSync('admin123', salt);
+
   const dbData = {
+    users: [
+      {
+        _id: 'user_admin',
+        name: 'FlavorNest Admin',
+        email: 'admin@flavornest.com',
+        password: hashedAdminPassword,
+        role: 'admin',
+        createdAt: new Date().toISOString()
+      }
+    ],
     reservations: [],
     subscribers: [
       { _id: 'sub_1', email: 'patron@example.com', subscribedAt: new Date().toISOString() }
@@ -161,6 +177,7 @@ const seedJSON = () => {
   console.log('Local JSON Database seeded successfully!');
 };
 
+
 const seedMongo = async () => {
   console.log('Connecting to MongoDB for seeding...');
   const connUri = process.env.MONGO_URI || 'mongodb://localhost:27017/flavornest';
@@ -175,7 +192,17 @@ const seedMongo = async () => {
     await Offer.deleteMany({});
     await Reservation.deleteMany({});
     await Subscriber.deleteMany({});
+    await User.deleteMany({});
     console.log('Cleared existing MongoDB data.');
+
+    // Insert admin user
+    await User.create({
+      name: 'FlavorNest Admin',
+      email: 'admin@flavornest.com',
+      password: 'admin123',
+      role: 'admin'
+    });
+
 
     // Insert items
     await MenuItem.insertMany(menuItemsData);
@@ -183,6 +210,7 @@ const seedMongo = async () => {
     await Offer.insertMany(offersData);
     
     console.log('MongoDB database seeded successfully!');
+
     await mongoose.disconnect();
   } catch (error) {
     console.warn(`MongoDB Seed failed: ${error.message}`);

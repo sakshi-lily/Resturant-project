@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
 import { Mail, Phone, MapPin, Send, CheckCircle2, AlertCircle } from 'lucide-react';
+import { API_URL } from '../config';
 
 export const Footer = () => {
   const [email, setEmail] = useState('');
@@ -12,7 +13,7 @@ export const Footer = () => {
     if (!email) return;
     setStatus('loading');
     try {
-      const response = await fetch('http://localhost:5000/api/subscribers', {
+      const response = await fetch(`${API_URL}/subscribers`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',

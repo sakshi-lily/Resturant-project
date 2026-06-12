@@ -2,6 +2,8 @@ import React, { useState } from 'react';
 import { Calendar, Users, Clock, Compass, CheckCircle } from 'lucide-react';
 import GlassModal from '../components/GlassModal';
 import { useToast } from '../context/ToastContext';
+import { API_URL } from '../config';
+
 
 export const Reservation = () => {
   const getTomorrowDateString = () => {
@@ -69,7 +71,8 @@ export const Reservation = () => {
     setBookingStatus('loading');
 
     try {
-      const response = await fetch('http://localhost:5000/api/reservations', {
+      const response = await fetch(`${API_URL}/reservations`, {
+
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',

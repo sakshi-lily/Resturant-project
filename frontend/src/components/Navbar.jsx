@@ -1,11 +1,15 @@
 import React, { useState, useEffect } from 'react';
 import { Link, useLocation } from 'react-router-dom';
 import { Menu, X, UtensilsCrossed, ShieldAlert } from 'lucide-react';
+import { useAuth } from '../context/AuthContext';
+
 
 export const Navbar = () => {
   const [isOpen, setIsOpen] = useState(false);
   const [scrolled, setScrolled] = useState(false);
   const location = useLocation();
+  const { user, logout } = useAuth();
+
 
   useEffect(() => {
     const handleScroll = () => {
@@ -97,14 +101,28 @@ export const Navbar = () => {
 
         {/* Action Buttons */}
         <div style={{ display: 'flex', alignItems: 'center', gap: '15px' }} className="nav-desktop-actions">
-          <Link to="/admin" className="btn btn-secondary" style={{ padding: '8px 16px', fontSize: '13px', display: 'flex', alignItems: 'center', gap: '6px' }}>
-            <ShieldAlert size={14} style={{ color: 'var(--color-primary)' }} />
-            <span>Admin</span>
-          </Link>
+          {user ? (
+            <>
+              {user.role === 'admin' && (
+                <Link to="/admin" className="btn btn-secondary" style={{ padding: '8px 16px', fontSize: '13px', display: 'flex', alignItems: 'center', gap: '6px' }}>
+                  <ShieldAlert size={14} style={{ color: 'var(--color-primary)' }} />
+                  <span>Admin</span>
+                </Link>
+              )}
+              <button onClick={logout} className="btn btn-secondary" style={{ padding: '8px 16px', fontSize: '13px', cursor: 'pointer', background: 'transparent', border: '1px solid rgba(255,255,255,0.1)', color: '#FFF' }}>
+                Sign Out
+              </button>
+            </>
+          ) : (
+            <Link to="/login" className="btn btn-secondary" style={{ padding: '8px 16px', fontSize: '13px' }}>
+              Sign In
+            </Link>
+          )}
           <Link to="/reservation" className="btn btn-primary" style={{ padding: '10px 20px', fontSize: '13px' }}>
             Book a Table
           </Link>
         </div>
+
 
         {/* Hamburger Toggler */}
         <button
@@ -156,13 +174,27 @@ export const Navbar = () => {
             </Link>
           ))}
           <div style={{ display: 'flex', flexDirection: 'column', gap: '15px', marginTop: '20px' }}>
-            <Link to="/admin" onClick={() => setIsOpen(false)} className="btn btn-secondary" style={{ width: '100%' }}>
-              Admin Panel
-            </Link>
+            {user ? (
+              <>
+                {user.role === 'admin' && (
+                  <Link to="/admin" onClick={() => setIsOpen(false)} className="btn btn-secondary" style={{ width: '100%' }}>
+                    Admin Panel
+                  </Link>
+                )}
+                <button onClick={() => { logout(); setIsOpen(false); }} className="btn btn-secondary" style={{ width: '100%', cursor: 'pointer', background: 'transparent', border: '1px solid rgba(255,255,255,0.1)', color: '#FFF', padding: '10px' }}>
+                  Sign Out
+                </button>
+              </>
+            ) : (
+              <Link to="/login" onClick={() => setIsOpen(false)} className="btn btn-secondary" style={{ width: '100%' }}>
+                Sign In
+              </Link>
+            )}
             <Link to="/reservation" onClick={() => setIsOpen(false)} className="btn btn-primary" style={{ width: '100%' }}>
               Book a Table
             </Link>
           </div>
+
         </div>
       )}
 

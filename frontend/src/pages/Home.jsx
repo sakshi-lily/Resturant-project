@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import { ArrowRight, Star, Clock, Calendar, ShieldCheck, Tag } from 'lucide-react';
+import { API_URL } from '../config';
 
 export const Home = () => {
   const [featuredDishes, setFeaturedDishes] = useState([]);
@@ -10,7 +11,7 @@ export const Home = () => {
 
   useEffect(() => {
     // Fetch featured/chef special dishes
-    fetch('http://localhost:5000/api/menu')
+    fetch(`${API_URL}/menu`)
       .then(res => res.json())
       .then(data => {
         const specials = data.filter(item => item.isChefSpecial).slice(0, 3);
@@ -20,7 +21,7 @@ export const Home = () => {
       .catch(() => setLoadingDishes(false));
 
     // Fetch approved reviews for testimonial section
-    fetch('http://localhost:5000/api/reviews?approvedOnly=true')
+    fetch(`${API_URL}/reviews?approvedOnly=true`)
       .then(res => res.json())
       .then(data => {
         setReviews(data.slice(0, 3));
@@ -28,7 +29,8 @@ export const Home = () => {
       .catch(err => console.log('Reviews fetch err', err));
 
     // Fetch offers
-    fetch('http://localhost:5000/api/offers?activeOnly=true')
+    fetch(`${API_URL}/offers?activeOnly=true`)
+
       .then(res => res.json())
       .then(data => {
         setOffers(data.slice(0, 2));

@@ -1,6 +1,8 @@
 import React, { useState, useEffect } from 'react';
 import { Search, Flame, Sparkles, ChevronLeft, ChevronRight, Inbox } from 'lucide-react';
 import { useToast } from '../context/ToastContext';
+import { API_URL } from '../config';
+
 
 export const Menu = () => {
   const [menuItems, setMenuItems] = useState([]);
@@ -17,7 +19,8 @@ export const Menu = () => {
   const categories = ['All', 'Appetizers', 'Mains', 'Desserts', 'Beverages'];
 
   useEffect(() => {
-    fetch('http://localhost:5000/api/menu')
+    fetch(`${API_URL}/menu`)
+
       .then((res) => res.json())
       .then((data) => {
         setMenuItems(data);
