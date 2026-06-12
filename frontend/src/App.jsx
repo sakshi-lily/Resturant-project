@@ -5,6 +5,8 @@ import { Calendar } from 'lucide-react';
 // Providers
 import { ToastProvider } from './context/ToastContext';
 import { AuthProvider } from './context/AuthContext';
+import { CartProvider } from './context/CartContext';
+
 
 // Reusable Layouts
 import Navbar from './components/Navbar';
@@ -24,6 +26,10 @@ import Register from './pages/Register';
 
 // Route Guards
 import ProtectedRoute from './components/ProtectedRoute';
+
+// Cart UI
+import CartDrawer from './components/CartDrawer';
+
 
 
 // Scroll To Top on page navigation
@@ -86,42 +92,48 @@ function App() {
   return (
     <ToastProvider>
       <AuthProvider>
-        <BrowserRouter>
-          <ScrollToTop />
-          
-          {/* Shared Navigation Header */}
-          <Navbar />
-          
-          {/* Route Switcher */}
-          <main style={{ minHeight: 'calc(100vh - 120px)' }}>
-            <Routes>
-              <Route path="/" element={<Home />} />
-              <Route path="/menu" element={<Menu />} />
-              <Route path="/about" element={<About />} />
-              <Route path="/gallery" element={<Gallery />} />
-              <Route path="/reservation" element={<Reservation />} />
-              <Route path="/reviews" element={<Reviews />} />
-              <Route path="/contact" element={<Contact />} />
-              <Route path="/login" element={<Login />} />
-              <Route path="/register" element={<Register />} />
-              <Route path="/admin" element={
-                <ProtectedRoute>
-                  <AdminDashboard />
-                </ProtectedRoute>
-              } />
-            </Routes>
-          </main>
-          
-          {/* Shared Footer */}
-          <Footer />
-          
-          {/* Floating CTA */}
-          <StickyMobileCTA />
-        </BrowserRouter>
+        <CartProvider>
+          <BrowserRouter>
+            <ScrollToTop />
+            
+            {/* Shared Navigation Header */}
+            <Navbar />
+            
+            {/* Route Switcher */}
+            <main style={{ minHeight: 'calc(100vh - 120px)' }}>
+              <Routes>
+                <Route path="/" element={<Home />} />
+                <Route path="/menu" element={<Menu />} />
+                <Route path="/about" element={<About />} />
+                <Route path="/gallery" element={<Gallery />} />
+                <Route path="/reservation" element={<Reservation />} />
+                <Route path="/reviews" element={<Reviews />} />
+                <Route path="/contact" element={<Contact />} />
+                <Route path="/login" element={<Login />} />
+                <Route path="/register" element={<Register />} />
+                <Route path="/admin" element={
+                  <ProtectedRoute>
+                    <AdminDashboard />
+                  </ProtectedRoute>
+                } />
+              </Routes>
+            </main>
+            
+            {/* Shared Footer */}
+            <Footer />
+            
+            {/* Floating CTA */}
+            <StickyMobileCTA />
+
+            {/* Slide-out Cart Panel */}
+            <CartDrawer />
+          </BrowserRouter>
+        </CartProvider>
       </AuthProvider>
     </ToastProvider>
   );
 }
+
 
 
 export default App;

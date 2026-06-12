@@ -1,7 +1,9 @@
 import React, { useState, useEffect } from 'react';
 import { Link, useLocation } from 'react-router-dom';
-import { Menu, X, UtensilsCrossed, ShieldAlert } from 'lucide-react';
+import { Menu, X, UtensilsCrossed, ShieldAlert, ShoppingCart } from 'lucide-react';
 import { useAuth } from '../context/AuthContext';
+import { useCart } from '../context/CartContext';
+
 
 
 export const Navbar = () => {
@@ -9,6 +11,8 @@ export const Navbar = () => {
   const [scrolled, setScrolled] = useState(false);
   const location = useLocation();
   const { user, logout } = useAuth();
+  const { getCartCount, setIsCartOpen } = useCart();
+
 
 
   useEffect(() => {
@@ -101,6 +105,51 @@ export const Navbar = () => {
 
         {/* Action Buttons */}
         <div style={{ display: 'flex', alignItems: 'center', gap: '15px' }} className="nav-desktop-actions">
+          {/* Cart Icon Trigger */}
+          <button 
+            onClick={() => setIsCartOpen(true)}
+            style={{
+              background: 'rgba(255, 107, 53, 0.08)',
+              border: '1px solid rgba(255, 107, 53, 0.2)',
+              borderRadius: '50%',
+              width: '40px',
+              height: '40px',
+              display: 'flex',
+              alignItems: 'center',
+              justifyContent: 'center',
+              color: '#FFF',
+              cursor: 'pointer',
+              position: 'relative',
+              transition: 'var(--transition-smooth)',
+              padding: 0
+            }}
+            onMouseEnter={(e) => e.currentTarget.style.background = 'rgba(255, 107, 53, 0.2)'}
+            onMouseLeave={(e) => e.currentTarget.style.background = 'rgba(255, 107, 53, 0.08)'}
+          >
+            <ShoppingCart size={18} style={{ color: 'var(--color-primary)' }} />
+            {getCartCount() > 0 && (
+              <span style={{
+                position: 'absolute',
+                top: '-4px',
+                right: '-4px',
+                background: 'var(--color-accent-gold)',
+                color: '#000',
+                fontSize: '10px',
+                fontWeight: 800,
+                width: '18px',
+                height: '18px',
+                borderRadius: '50%',
+                display: 'flex',
+                alignItems: 'center',
+                justifyContent: 'center',
+                boxShadow: '0 2px 8px rgba(0,0,0,0.5)',
+                border: '1.5px solid #000'
+              }}>
+                {getCartCount()}
+              </span>
+            )}
+          </button>
+
           {user ? (
             <>
               {user.role === 'admin' && (
@@ -124,20 +173,62 @@ export const Navbar = () => {
         </div>
 
 
-        {/* Hamburger Toggler */}
-        <button
-          className="nav-mobile-toggle"
-          onClick={() => setIsOpen(!isOpen)}
-          style={{
-            background: 'none',
-            border: 'none',
-            color: '#FFF',
-            cursor: 'pointer',
-            display: 'none' // Handled by media query in App.css or index.css
-          }}
-        >
-          {isOpen ? <X size={26} /> : <Menu size={26} />}
-        </button>
+
+        {/* Hamburger Toggler Container */}
+        <div style={{ display: 'flex', alignItems: 'center' }}>
+          {/* Mobile Cart Toggler */}
+          <button 
+            onClick={() => setIsCartOpen(true)}
+            className="nav-mobile-cart"
+            style={{
+              background: 'none',
+              border: 'none',
+              color: '#FFF',
+              cursor: 'pointer',
+              position: 'relative',
+              marginRight: '20px',
+              display: 'none',
+              padding: 0
+            }}
+          >
+            <ShoppingCart size={22} style={{ color: 'var(--color-primary)' }} />
+            {getCartCount() > 0 && (
+              <span style={{
+                position: 'absolute',
+                top: '-5px',
+                right: '-5px',
+                background: 'var(--color-accent-gold)',
+                color: '#000',
+                fontSize: '9px',
+                fontWeight: 800,
+                width: '15px',
+                height: '15px',
+                borderRadius: '50%',
+                display: 'flex',
+                alignItems: 'center',
+                justifyContent: 'center',
+                border: '1px solid #000'
+              }}>
+                {getCartCount()}
+              </span>
+            )}
+          </button>
+
+          <button
+            className="nav-mobile-toggle"
+            onClick={() => setIsOpen(!isOpen)}
+            style={{
+              background: 'none',
+              border: 'none',
+              color: '#FFF',
+              cursor: 'pointer',
+              display: 'none' // Handled by media query in App.css or index.css
+            }}
+          >
+            {isOpen ? <X size={26} /> : <Menu size={26} />}
+          </button>
+        </div>
+
       </div>
 
       {/* Mobile Drawer */}
@@ -204,11 +295,12 @@ export const Navbar = () => {
           .nav-desktop-links, .nav-desktop-actions {
             display: none !important;
           }
-          .nav-mobile-toggle {
+          .nav-mobile-toggle, .nav-mobile-cart {
             display: block !important;
           }
         }
       `}</style>
+
     </nav>
   );
 };

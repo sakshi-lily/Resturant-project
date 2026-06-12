@@ -2,6 +2,8 @@ import React, { useState, useEffect } from 'react';
 import { Search, Flame, Sparkles, ChevronLeft, ChevronRight, Inbox } from 'lucide-react';
 import { useToast } from '../context/ToastContext';
 import { API_URL } from '../config';
+import { useCart } from '../context/CartContext';
+
 
 
 export const Menu = () => {
@@ -16,7 +18,9 @@ export const Menu = () => {
   const itemsPerPage = 6;
   
   const { showToast } = useToast();
+  const { addToCart } = useCart();
   const categories = ['All', 'Appetizers', 'Mains', 'Desserts', 'Beverages'];
+
 
   useEffect(() => {
     fetch(`${API_URL}/menu`)
@@ -115,26 +119,36 @@ export const Menu = () => {
                     <p style={{ color: 'var(--color-text-muted)', fontSize: '13px', marginBottom: '12px', lineHeight: '1.5' }}>
                       {item.description}
                     </p>
-                    <span style={{
-                      display: 'inline-flex',
-                      alignItems: 'center',
-                      gap: '4px',
-                      fontSize: '11px',
-                      background: 'rgba(212, 175, 55, 0.1)',
-                      color: 'var(--color-accent-gold)',
-                      padding: '3px 8px',
-                      borderRadius: '20px',
-                      fontWeight: 600
-                    }}>
-                      <Sparkles size={10} />
-                      Chef Special
-                    </span>
+                    <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+                      <span style={{
+                        display: 'inline-flex',
+                        alignItems: 'center',
+                        gap: '4px',
+                        fontSize: '11px',
+                        background: 'rgba(212, 175, 55, 0.1)',
+                        color: 'var(--color-accent-gold)',
+                        padding: '3px 8px',
+                        borderRadius: '20px',
+                        fontWeight: 600
+                      }}>
+                        <Sparkles size={10} />
+                        Chef Special
+                      </span>
+                      <button
+                        onClick={() => addToCart(item)}
+                        className="btn btn-primary"
+                        style={{ padding: '6px 12px', fontSize: '11px', borderRadius: '6px' }}
+                      >
+                        Add to Cart
+                      </button>
+                    </div>
                   </div>
                 </div>
               ))}
             </div>
           </div>
         )}
+
 
         {/* Filters & Search Bar */}
         <div style={{
@@ -234,24 +248,34 @@ export const Menu = () => {
                     <p style={{ color: 'var(--color-text-muted)', fontSize: '13px', marginBottom: '16px', minHeight: '60px', lineHeight: '1.6' }}>
                       {item.description}
                     </p>
-                    <div style={{ display: 'flex', gap: '8px', flexWrap: 'wrap' }}>
-                      {item.allergens && item.allergens.map((alg, index) => (
-                        <span key={index} style={{
-                          fontSize: '10px',
-                          background: 'rgba(255, 107, 53, 0.08)',
-                          color: 'var(--color-primary)',
-                          padding: '3px 8px',
-                          borderRadius: '20px',
-                          fontWeight: 600
-                        }}>
-                          {alg}
-                        </span>
-                      ))}
+                    <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', paddingTop: '16px', borderTop: '1px solid rgba(255,255,255,0.03)' }}>
+                      <div style={{ display: 'flex', gap: '6px', flexWrap: 'wrap' }}>
+                        {item.allergens && item.allergens.slice(0, 2).map((alg, index) => (
+                          <span key={index} style={{
+                            fontSize: '10px',
+                            background: 'rgba(255, 107, 53, 0.08)',
+                            color: 'var(--color-primary)',
+                            padding: '3px 8px',
+                            borderRadius: '20px',
+                            fontWeight: 600
+                          }}>
+                            {alg}
+                          </span>
+                        ))}
+                      </div>
+                      <button
+                        onClick={() => addToCart(item)}
+                        className="btn btn-primary"
+                        style={{ padding: '6px 12px', fontSize: '11px', borderRadius: '6px' }}
+                      >
+                        Add to Cart
+                      </button>
                     </div>
                   </div>
                 </div>
               ))}
             </div>
+
 
             {/* Pagination Controls */}
             {totalPages > 1 && (

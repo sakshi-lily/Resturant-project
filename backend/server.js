@@ -10,6 +10,8 @@ import subscriberRoutes from './routes/subscriberRoutes.js';
 import reviewRoutes from './routes/reviewRoutes.js';
 import offerRoutes from './routes/offerRoutes.js';
 import authRoutes from './routes/authRoutes.js';
+import orderRoutes from './routes/orderRoutes.js';
+
 
 
 
@@ -30,6 +32,8 @@ app.use('/api/subscribers', subscriberRoutes);
 app.use('/api/reviews', reviewRoutes);
 app.use('/api/offers', offerRoutes);
 app.use('/api/auth', authRoutes);
+app.use('/api/orders', orderRoutes);
+
 
 
 app.get('/api/health', (req, res) => {

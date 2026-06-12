@@ -1,13 +1,14 @@
 import React, { useState, useEffect } from 'react';
-import { BarChart3, Calendar, Utensils, MessageSquare, Mail, Check, X, Trash2, Plus, Edit3, Image, ShieldAlert } from 'lucide-react';
+import { BarChart3, Calendar, Utensils, MessageSquare, Mail, Check, X, Trash2, Plus, Edit3, Image, ShieldAlert, DollarSign, ShoppingBag } from 'lucide-react';
 import GlassModal from '../components/GlassModal';
 import { API_URL } from '../config';
 import { useAuth } from '../context/AuthContext';
 
 
 
+
 export const AdminDashboard = () => {
-  const [activeTab, setActiveTab] = useState('bookings'); // bookings, menu, offers, reviews, subscribers
+  const [activeTab, setActiveTab] = useState('orders'); // orders, bookings, menu, offers, reviews, subscribers
   const { token } = useAuth();
   
   // Data States
@@ -17,6 +18,7 @@ export const AdminDashboard = () => {
   const [reviews, setReviews] = useState([]);
   const [offers, setOffers] = useState([]);
   const [subscribers, setSubscribers] = useState([]);
+  const [orders, setOrders] = useState([]);
   
   // Modal / Form States
   const [isMenuModalOpen, setIsMenuModalOpen] = useState(false);
@@ -47,22 +49,24 @@ export const AdminDashboard = () => {
     setLoading(true);
     const headers = { 'Authorization': `Bearer ${token}` };
     try {
-      const [bookingsRes, menuRes, reviewsRes, offersRes, subsRes] = await Promise.all([
+      const [bookingsRes, menuRes, reviewsRes, offersRes, subsRes, ordersRes] = await Promise.all([
         fetch(`${API_URL}/reservations`, { headers }),
         fetch(`${API_URL}/menu`, { headers }),
         fetch(`${API_URL}/reviews`, { headers }),
         fetch(`${API_URL}/offers`, { headers }),
-        fetch(`${API_URL}/subscribers`, { headers })
+        fetch(`${API_URL}/subscribers`, { headers }),
+        fetch(`${API_URL}/orders`, { headers })
       ]);
 
 
 
-      const [bookingsData, menuData, reviewsData, offersData, subsData] = await Promise.all([
+      const [bookingsData, menuData, reviewsData, offersData, subsData, ordersData] = await Promise.all([
         bookingsRes.json(),
         menuRes.json(),
         reviewsRes.json(),
         offersRes.json(),
-        subsRes.json()
+        subsRes.json(),
+        ordersRes.json()
       ]);
 
       setBookings(bookingsData);
@@ -70,6 +74,7 @@ export const AdminDashboard = () => {
       setReviews(reviewsData);
       setOffers(offersData);
       setSubscribers(subsData);
+      setOrders(ordersData);
       setLoading(false);
     } catch (error) {
       console.error('Failed to load admin panel data', error);
@@ -137,6 +142,42 @@ export const AdminDashboard = () => {
       console.error(err);
     }
   };
+
+  // Update Order Status
+  const handleUpdateOrderStatus = async (id, status) => {
+    try {
+      const res = await fetch(`${API_URL}/orders/${id}`, {
+        method: 'PUT',
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': `Bearer ${token}`
+        },
+        body: JSON.stringify({ status })
+      });
+      if (res.ok) {
+        setOrders(prev => prev.map(o => o._id === id ? { ...o, status } : o));
+      }
+    } catch (err) {
+      console.error(err);
+    }
+  };
+
+  // Delete Order Record
+  const handleDeleteOrder = async (id) => {
+    if (!window.confirm('Permanently delete this order record?')) return;
+    try {
+      const res = await fetch(`${API_URL}/orders/${id}`, {
+        method: 'DELETE',
+        headers: { 'Authorization': `Bearer ${token}` }
+      });
+      if (res.ok) {
+        setOrders(prev => prev.filter(o => o._id !== id));
+      }
+    } catch (err) {
+      console.error(err);
+    }
+  };
+
 
   // Toggle review moderation status
   const handleToggleReviewApproval = async (id, currentStatus) => {
@@ -326,6 +367,15 @@ export const AdminDashboard = () => {
   const totalSubscribers = subscribers.length;
   const activeOffersCount = offers.filter(o => o.isActive).length;
 
+  const totalRevenue = orders
+    .filter(o => o.status === 'Delivered')
+    .reduce((acc, o) => acc + o.totalAmount, 0);
+  const activeOrdersCount = orders
+    .filter(o => o.status !== 'Delivered' && o.status !== 'Cancelled')
+    .length;
+  const pendingOrdersCount = orders.filter(o => o.status === 'Pending').length;
+
+
   // Seating Zone Stats
   const zoneStats = bookings.reduce((acc, curr) => {
     const area = curr.seatingArea || 'Indoor';
@@ -375,7 +425,25 @@ export const AdminDashboard = () => {
           marginBottom: '40px'
         }} className="grid-4">
           <div className="glass-card" style={{ display: 'flex', gap: '15px', alignItems: 'center' }}>
-            <Calendar size={32} style={{ color: 'var(--color-primary)' }} />
+            <DollarSign size={32} style={{ color: '#4ADE80' }} />
+            <div>
+              <span style={{ display: 'block', fontSize: '12px', color: 'var(--color-text-muted)' }}>Total Revenue</span>
+              <strong style={{ fontSize: '22px', color: '#FFF' }}>${totalRevenue}</strong>
+              <span style={{ display: 'block', fontSize: '10px', color: '#4ADE80' }}>From delivered orders</span>
+            </div>
+          </div>
+
+          <div className="glass-card" style={{ display: 'flex', gap: '15px', alignItems: 'center' }}>
+            <ShoppingBag size={32} style={{ color: 'var(--color-primary)' }} />
+            <div>
+              <span style={{ display: 'block', fontSize: '12px', color: 'var(--color-text-muted)' }}>Active Orders</span>
+              <strong style={{ fontSize: '22px', color: '#FFF' }}>{activeOrdersCount}</strong>
+              <span style={{ display: 'block', fontSize: '10px', color: 'var(--color-accent-gold)' }}>{pendingOrdersCount} pending approval</span>
+            </div>
+          </div>
+
+          <div className="glass-card" style={{ display: 'flex', gap: '15px', alignItems: 'center' }}>
+            <Calendar size={32} style={{ color: 'var(--color-accent-gold)' }} />
             <div>
               <span style={{ display: 'block', fontSize: '12px', color: 'var(--color-text-muted)' }}>Reservations</span>
               <strong style={{ fontSize: '22px', color: '#FFF' }}>{totalBookings}</strong>
@@ -384,32 +452,15 @@ export const AdminDashboard = () => {
           </div>
 
           <div className="glass-card" style={{ display: 'flex', gap: '15px', alignItems: 'center' }}>
-            <Utensils size={32} style={{ color: 'var(--color-accent-gold)' }} />
+            <Utensils size={32} style={{ color: 'var(--color-primary)' }} />
             <div>
-              <span style={{ display: 'block', fontSize: '12px', color: 'var(--color-text-muted)' }}>Menu Items</span>
+              <span style={{ display: 'block', fontSize: '12px', color: 'var(--color-text-muted)' }}>Menu Catalog</span>
               <strong style={{ fontSize: '22px', color: '#FFF' }}>{menuItems.length}</strong>
-              <span style={{ display: 'block', fontSize: '10px', color: 'var(--color-text-muted)' }}>4 Categories</span>
-            </div>
-          </div>
-
-          <div className="glass-card" style={{ display: 'flex', gap: '15px', alignItems: 'center' }}>
-            <Mail size={32} style={{ color: 'var(--color-primary)' }} />
-            <div>
-              <span style={{ display: 'block', fontSize: '12px', color: 'var(--color-text-muted)' }}>Subscribers</span>
-              <strong style={{ fontSize: '22px', color: '#FFF' }}>{totalSubscribers}</strong>
-              <span style={{ display: 'block', fontSize: '10px', color: '#4ADE80' }}>Active Mailing</span>
-            </div>
-          </div>
-
-          <div className="glass-card" style={{ display: 'flex', gap: '15px', alignItems: 'center' }}>
-            <MessageSquare size={32} style={{ color: 'var(--color-accent-gold)' }} />
-            <div>
-              <span style={{ display: 'block', fontSize: '12px', color: 'var(--color-text-muted)' }}>Guest Reviews</span>
-              <strong style={{ fontSize: '22px', color: '#FFF' }}>{reviews.length}</strong>
-              <span style={{ display: 'block', fontSize: '10px', color: 'var(--color-primary)' }}>{activeOffersCount} active offers</span>
+              <span style={{ display: 'block', fontSize: '10px', color: 'var(--color-primary)' }}>{reviews.length} reviews moderated</span>
             </div>
           </div>
         </div>
+
 
         {/* 1.5 Analytics Charts Grid */}
         <div style={{
@@ -535,12 +586,14 @@ export const AdminDashboard = () => {
         {/* 2. Sub-navigation tabs */}
         <div className="filter-tabs" style={{ marginBottom: '30px', borderBottom: '1px solid rgba(255, 255, 255, 0.05)', paddingBottom: '16px' }}>
           {[
+            { id: 'orders', name: 'Orders Manager' },
             { id: 'bookings', name: 'Reservations Manager' },
             { id: 'menu', name: 'Menu Editor (CRUD)' },
             { id: 'offers', name: 'Offers & Banners' },
             { id: 'reviews', name: 'Review Moderator' },
             { id: 'subscribers', name: 'Subscribers List' }
           ].map(tab => (
+
             <button
               key={tab.id}
               onClick={() => setActiveTab(tab.id)}
@@ -557,8 +610,99 @@ export const AdminDashboard = () => {
         ) : (
           <div className="glass-card" style={{ padding: '24px', overflowX: 'auto' }}>
             
+            {/* TAB 0: ORDERS */}
+            {activeTab === 'orders' && (
+              <div>
+                <h3 style={{ fontSize: '20px', color: '#FFF', marginBottom: '20px' }}>Customer Orders</h3>
+                {orders.length === 0 ? (
+                  <div style={{ color: 'var(--color-text-muted)', textAlign: 'center', padding: '20px' }}>No order records found.</div>
+                ) : (
+                  <table style={{ width: '100%', borderCollapse: 'collapse', textAlign: 'left', fontSize: '14px' }} className="admin-table">
+                    <thead>
+                      <tr style={{ borderBottom: '1px solid rgba(255, 255, 255, 0.08)', color: 'var(--color-accent-gold)' }}>
+                        <th style={{ padding: '12px' }}>Customer</th>
+                        <th style={{ padding: '12px' }}>Address</th>
+                        <th style={{ padding: '12px' }}>Items</th>
+                        <th style={{ padding: '12px' }}>Total Amount</th>
+                        <th style={{ padding: '12px' }}>Status</th>
+                        <th style={{ padding: '12px', textAlign: 'right' }}>Actions</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      {orders.map(o => (
+                        <tr key={o._id} style={{ borderBottom: '1px solid rgba(255, 255, 255, 0.04)' }}>
+                          <td style={{ padding: '12px' }}>
+                            <div style={{ fontWeight: 600, color: '#FFF' }}>{o.customerName}</div>
+                            <div style={{ fontSize: '11px', color: 'var(--color-text-muted)' }}>{o.phone} | {o.email}</div>
+                            <div style={{ fontSize: '10px', color: 'var(--color-primary)', marginTop: '4px' }}>
+                              {new Date(o.createdAt).toLocaleString()}
+                            </div>
+                          </td>
+                          <td style={{ padding: '12px', color: 'var(--color-text-light)', fontSize: '13px', maxWidth: '180px' }}>
+                            {o.deliveryAddress}
+                          </td>
+                          <td style={{ padding: '12px', fontSize: '13px' }}>
+                            <ul style={{ listStyle: 'none', padding: 0, margin: 0, display: 'flex', flexDirection: 'column', gap: '4px' }}>
+                              {o.items.map((item, idx) => (
+                                <li key={idx} style={{ color: 'var(--color-text-light)' }}>
+                                  <span style={{ color: 'var(--color-primary)', fontWeight: 600 }}>{item.quantity}x</span> {item.name} <span style={{ color: 'var(--color-text-muted)' }}>(${item.price})</span>
+                                </li>
+                              ))}
+                            </ul>
+                          </td>
+                          <td style={{ padding: '12px', fontWeight: 700, color: 'var(--color-accent-gold)', fontSize: '15px' }}>
+                            ${o.totalAmount}
+                          </td>
+                          <td style={{ padding: '12px' }}>
+                            <span style={{
+                              padding: '4px 8px',
+                              borderRadius: '20px',
+                              fontSize: '11px',
+                              fontWeight: 600,
+                              background: o.status === 'Delivered' ? 'rgba(74, 222, 128, 0.1)' : o.status === 'Cancelled' ? 'rgba(248, 113, 113, 0.1)' : o.status === 'Preparing' ? 'rgba(59, 130, 246, 0.1)' : o.status === 'Out for Delivery' ? 'rgba(167, 139, 250, 0.1)' : 'rgba(251, 191, 36, 0.1)',
+                              color: o.status === 'Delivered' ? '#4ADE80' : o.status === 'Cancelled' ? '#F87171' : o.status === 'Preparing' ? '#3B82F6' : o.status === 'Out for Delivery' ? '#A78BFA' : '#FBBF24'
+                            }}>
+                              {o.status}
+                            </span>
+                          </td>
+                          <td style={{ padding: '12px', textAlign: 'right' }}>
+                            <div style={{ display: 'inline-flex', gap: '10px', alignItems: 'center' }}>
+                              <select
+                                value={o.status}
+                                onChange={(e) => handleUpdateOrderStatus(o._id, e.target.value)}
+                                style={{
+                                  background: 'rgba(255,255,255,0.03)',
+                                  border: '1px solid rgba(255,255,255,0.08)',
+                                  borderRadius: '6px',
+                                  color: '#FFF',
+                                  fontSize: '12px',
+                                  padding: '5px 10px',
+                                  cursor: 'pointer'
+                                }}
+                              >
+                                <option value="Pending" style={{ backgroundColor: '#141412' }}>Pending</option>
+                                <option value="Preparing" style={{ backgroundColor: '#141412' }}>Preparing</option>
+                                <option value="Out for Delivery" style={{ backgroundColor: '#141412' }}>Out for Delivery</option>
+                                <option value="Delivered" style={{ backgroundColor: '#141412' }}>Delivered</option>
+                                <option value="Cancelled" style={{ backgroundColor: '#141412' }}>Cancelled</option>
+                              </select>
+                              
+                              <button onClick={() => handleDeleteOrder(o._id)} title="Delete Record" style={{ background: 'rgba(255,255,255,0.03)', border: '1px solid rgba(255,255,255,0.08)', width: '28px', height: '28px', borderRadius: '4px', color: 'var(--color-text-muted)', cursor: 'pointer', display: 'inline-flex', alignItems: 'center', justifyContent: 'center' }} onMouseEnter={(e) => e.target.style.color = '#F87171'} onMouseLeave={(e) => e.target.style.color = 'var(--color-text-muted)'}>
+                                <Trash2 size={14} style={{ margin: 'auto' }} />
+                              </button>
+                            </div>
+                          </td>
+                        </tr>
+                      ))}
+                    </tbody>
+                  </table>
+                )}
+              </div>
+            )}
+
             {/* TAB A: RESERVATIONS */}
             {activeTab === 'bookings' && (
+
               <div>
                 <h3 style={{ fontSize: '20px', color: '#FFF', marginBottom: '20px' }}>Active Reservations</h3>
                 {bookings.length === 0 ? (

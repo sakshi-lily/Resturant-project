@@ -11,6 +11,8 @@ import Offer from './models/Offer.js';
 import Reservation from './models/Reservation.js';
 import Subscriber from './models/Subscriber.js';
 import User from './models/User.js';
+import Order from './models/Order.js';
+
 
 
 dotenv.config();
@@ -153,9 +155,40 @@ const seedJSON = () => {
       }
     ],
     reservations: [],
+    orders: [
+      {
+        _id: 'order_1',
+        customerName: 'Sarah Jenkins',
+        email: 'sarah@example.com',
+        phone: '555-0199',
+        deliveryAddress: '742 Evergreen Terrace, Springfield',
+        items: [
+          { menuItem: 'menu_1', name: 'Wagyu Ribeye Steak', quantity: 1, price: 89 },
+          { menuItem: 'menu_3', name: 'Crispy Cherrywood Pork Belly', quantity: 2, price: 22 }
+        ],
+        totalAmount: 133,
+        status: 'Preparing',
+        createdAt: new Date(Date.now() - 3600000 * 2).toISOString()
+      },
+      {
+        _id: 'order_2',
+        customerName: 'Michael Chang',
+        email: 'michael@example.com',
+        phone: '555-0182',
+        deliveryAddress: '100 Maple Avenue, Apt 4B',
+        items: [
+          { menuItem: 'menu_2', name: 'Lobster Agnolotti', quantity: 2, price: 48 },
+          { menuItem: 'menu_4', name: 'Orange Spiced Soufflé', quantity: 1, price: 24 }
+        ],
+        totalAmount: 120,
+        status: 'Delivered',
+        createdAt: new Date(Date.now() - 3600000 * 24).toISOString()
+      }
+    ],
     subscribers: [
       { _id: 'sub_1', email: 'patron@example.com', subscribedAt: new Date().toISOString() }
     ],
+
     menuItems: menuItemsData.map((item, idx) => ({
       _id: `menu_${idx + 1}`,
       createdAt: new Date().toISOString(),
@@ -193,21 +226,53 @@ const seedMongo = async () => {
     await Reservation.deleteMany({});
     await Subscriber.deleteMany({});
     await User.deleteMany({});
+    await Order.deleteMany({});
     console.log('Cleared existing MongoDB data.');
 
     // Insert admin user
+    const salt = await bcrypt.genSalt(10);
+    const hashedAdminPassword = await bcrypt.hash('admin123', salt);
     await User.create({
       name: 'FlavorNest Admin',
       email: 'admin@flavornest.com',
-      password: 'admin123',
+      password: hashedAdminPassword,
       role: 'admin'
     });
 
-
     // Insert items
-    await MenuItem.insertMany(menuItemsData);
+    const insertedMenu = await MenuItem.insertMany(menuItemsData);
     await Review.insertMany(reviewsData);
     await Offer.insertMany(offersData);
+    
+    // Insert orders
+    await Order.create([
+      {
+        customerName: 'Sarah Jenkins',
+        email: 'sarah@example.com',
+        phone: '555-0199',
+        deliveryAddress: '742 Evergreen Terrace, Springfield',
+        items: [
+          { menuItem: insertedMenu[0]._id, name: insertedMenu[0].name, quantity: 1, price: insertedMenu[0].price },
+          { menuItem: insertedMenu[2]._id, name: insertedMenu[2].name, quantity: 2, price: insertedMenu[2].price }
+        ],
+        totalAmount: 133,
+        status: 'Preparing',
+        createdAt: new Date(Date.now() - 3600000 * 2)
+      },
+      {
+        customerName: 'Michael Chang',
+        email: 'michael@example.com',
+        phone: '555-0182',
+        deliveryAddress: '100 Maple Avenue, Apt 4B',
+        items: [
+          { menuItem: insertedMenu[1]._id, name: insertedMenu[1].name, quantity: 2, price: insertedMenu[1].price },
+          { menuItem: insertedMenu[3]._id, name: insertedMenu[3].name, quantity: 1, price: insertedMenu[3].price }
+        ],
+        totalAmount: 120,
+        status: 'Delivered',
+        createdAt: new Date(Date.now() - 3600000 * 24)
+      }
+    ]);
     
     console.log('MongoDB database seeded successfully!');
 
