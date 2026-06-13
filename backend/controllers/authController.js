@@ -137,4 +137,50 @@ export const getUserProfile = async (req, res) => {
   }
 };
 
-export default { registerUser, loginUser, getUserProfile };
+export const updateUserProfile = async (req, res) => {
+  try {
+    const { name, password } = req.body;
+    
+    if (global.dbFallback) {
+      const updateData = {};
+      if (name) updateData.name = name;
+      if (password) {
+        const salt = await bcrypt.genSalt(10);
+        updateData.password = await bcrypt.hash(password, salt);
+      }
+      
+      const updatedUser = jsonDb.update('users', req.user._id, updateData);
+      if (!updatedUser) {
+        return res.status(404).json({ message: 'User not found' });
+      }
+      return res.json({
+        _id: updatedUser._id,
+        name: updatedUser.name,
+        email: updatedUser.email,
+        role: updatedUser.role
+      });
+    }
+
+    // MongoDB Mode
+    const user = await User.findById(req.user._id);
+    if (!user) {
+      return res.status(404).json({ message: 'User not found' });
+    }
+
+    if (name) user.name = name;
+    if (password) user.password = password; // mongoose pre-save hook will hash this
+
+    const updatedUser = await user.save();
+    res.json({
+      _id: updatedUser._id,
+      name: updatedUser.name,
+      email: updatedUser.email,
+      role: updatedUser.role
+    });
+  } catch (error) {
+    res.status(400).json({ message: error.message });
+  }
+};
+
+export default { registerUser, loginUser, getUserProfile, updateUserProfile };
+

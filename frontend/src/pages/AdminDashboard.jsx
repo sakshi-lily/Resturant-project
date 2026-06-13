@@ -1,15 +1,22 @@
 import React, { useState, useEffect } from 'react';
-import { BarChart3, Calendar, Utensils, MessageSquare, Mail, Check, X, Trash2, Plus, Edit3, Image, ShieldAlert, DollarSign, ShoppingBag } from 'lucide-react';
+import { 
+  BarChart3, Calendar, Utensils, MessageSquare, Mail, Check, X, Trash2, 
+  Plus, Edit3, Image, ShieldAlert, DollarSign, ShoppingBag, Clock, 
+  Compass, Users, CheckCircle, RefreshCw, AlertCircle 
+} from 'lucide-react';
 import GlassModal from '../components/GlassModal';
 import { API_URL } from '../config';
 import { useAuth } from '../context/AuthContext';
+import { useToast } from '../context/ToastContext';
 
 
 
 
 export const AdminDashboard = () => {
-  const [activeTab, setActiveTab] = useState('orders'); // orders, bookings, menu, offers, reviews, subscribers
+  const [activeTab, setActiveTab] = useState('orders'); // orders, reservations, menu, offers, reviews, subscribers
   const { token } = useAuth();
+  const { showToast } = useToast();
+  const [showAllOrders, setShowAllOrders] = useState(false);
   
   // Data States
   const [bookings, setBookings] = useState([]);
@@ -45,8 +52,8 @@ export const AdminDashboard = () => {
   const [loading, setLoading] = useState(true);
 
   // Fetch all backend data
-  const fetchData = async () => {
-    setLoading(true);
+  const fetchData = async (silent = false) => {
+    if (!silent) setLoading(true);
     const headers = { 'Authorization': `Bearer ${token}` };
     try {
       const [bookingsRes, menuRes, reviewsRes, offersRes, subsRes, ordersRes] = await Promise.all([
@@ -76,9 +83,13 @@ export const AdminDashboard = () => {
       setSubscribers(subsData);
       setOrders(ordersData);
       setLoading(false);
+      if (silent) {
+        showToast('Administrative dashboard synchronized with live databases.', 'success');
+      }
     } catch (error) {
       console.error('Failed to load admin panel data', error);
       setLoading(false);
+      showToast('Error syncing administrative data feeds.', 'error');
     }
   };
 
@@ -101,9 +112,13 @@ export const AdminDashboard = () => {
 
       if (res.ok) {
         setBookings(prev => prev.map(b => b._id === id ? { ...b, status } : b));
+        showToast(`Reservation request ${status.toLowerCase()}ed successfully.`, 'success');
+      } else {
+        showToast('Failed to update reservation status.', 'error');
       }
     } catch (err) {
       console.error(err);
+      showToast('Network error updating reservation status.', 'error');
     }
   };
 
@@ -119,9 +134,13 @@ export const AdminDashboard = () => {
 
       if (res.ok) {
         setBookings(prev => prev.filter(b => b._id !== id));
+        showToast('Reservation deleted successfully.', 'success');
+      } else {
+        showToast('Failed to delete reservation.', 'error');
       }
     } catch (err) {
       console.error(err);
+      showToast('Network error deleting reservation.', 'error');
     }
   };
 
@@ -137,9 +156,13 @@ export const AdminDashboard = () => {
 
       if (res.ok) {
         setSubscribers(prev => prev.filter(s => s._id !== id));
+        showToast('Subscriber removed successfully.', 'success');
+      } else {
+        showToast('Failed to remove subscriber.', 'error');
       }
     } catch (err) {
       console.error(err);
+      showToast('Network error removing subscriber.', 'error');
     }
   };
 
@@ -156,9 +179,13 @@ export const AdminDashboard = () => {
       });
       if (res.ok) {
         setOrders(prev => prev.map(o => o._id === id ? { ...o, status } : o));
+        showToast(`Order status updated to "${status}"`, 'success');
+      } else {
+        showToast('Failed to update order status.', 'error');
       }
     } catch (err) {
       console.error(err);
+      showToast('Network error updating order status.', 'error');
     }
   };
 
@@ -172,9 +199,13 @@ export const AdminDashboard = () => {
       });
       if (res.ok) {
         setOrders(prev => prev.filter(o => o._id !== id));
+        showToast('Order record deleted successfully.', 'success');
+      } else {
+        showToast('Failed to delete order record.', 'error');
       }
     } catch (err) {
       console.error(err);
+      showToast('Network error deleting order record.', 'error');
     }
   };
 
@@ -194,9 +225,13 @@ export const AdminDashboard = () => {
 
       if (res.ok) {
         setReviews(prev => prev.map(r => r._id === id ? { ...r, isApproved: !currentStatus } : r));
+        showToast(!currentStatus ? 'Review approved for public display.' : 'Review suspended from public display.', 'success');
+      } else {
+        showToast('Failed to update review moderation status.', 'error');
       }
     } catch (err) {
       console.error(err);
+      showToast('Network error updating review moderation.', 'error');
     }
   };
 
@@ -212,9 +247,13 @@ export const AdminDashboard = () => {
 
       if (res.ok) {
         setReviews(prev => prev.filter(r => r._id !== id));
+        showToast('Review permanently deleted.', 'success');
+      } else {
+        showToast('Failed to delete review.', 'error');
       }
     } catch (err) {
       console.error(err);
+      showToast('Network error deleting review.', 'error');
     }
   };
 
@@ -233,9 +272,13 @@ export const AdminDashboard = () => {
 
       if (res.ok) {
         setOffers(prev => prev.map(o => o._id === id ? { ...o, isActive: !currentStatus } : o));
+        showToast(!currentStatus ? 'Offer activated.' : 'Offer deactivated.', 'success');
+      } else {
+        showToast('Failed to update offer status.', 'error');
       }
     } catch (err) {
       console.error(err);
+      showToast('Network error toggling offer activation.', 'error');
     }
   };
 
@@ -251,9 +294,13 @@ export const AdminDashboard = () => {
 
       if (res.ok) {
         setOffers(prev => prev.filter(o => o._id !== id));
+        showToast('Promo campaign deleted.', 'success');
+      } else {
+        showToast('Failed to delete offer.', 'error');
       }
     } catch (err) {
       console.error(err);
+      showToast('Network error deleting offer.', 'error');
     }
   };
 
@@ -283,7 +330,7 @@ export const AdminDashboard = () => {
       });
 
       if (res.ok) {
-        fetchData();
+        fetchData(true);
         setIsMenuModalOpen(false);
         setEditingItem(null);
         setMenuForm({
@@ -295,9 +342,13 @@ export const AdminDashboard = () => {
           isChefSpecial: false,
           allergens: ''
         });
+        showToast(editingItem ? 'Dish updated successfully.' : 'New dish cataloged successfully.', 'success');
+      } else {
+        showToast('Failed to save dish menu item.', 'error');
       }
     } catch (err) {
       console.error(err);
+      showToast('Network error saving menu item.', 'error');
     }
   };
 
@@ -316,7 +367,7 @@ export const AdminDashboard = () => {
 
 
       if (res.ok) {
-        fetchData();
+        fetchData(true);
         setIsOfferModalOpen(false);
         setOfferForm({
           title: '',
@@ -324,9 +375,13 @@ export const AdminDashboard = () => {
           discountCode: '',
           isActive: true
         });
+        showToast('Promo banner published successfully.', 'success');
+      } else {
+        showToast('Failed to publish promo banner.', 'error');
       }
     } catch (err) {
       console.error(err);
+      showToast('Network error publishing offer banner.', 'error');
     }
   };
 
@@ -355,25 +410,29 @@ export const AdminDashboard = () => {
 
       if (res.ok) {
         setMenuItems(prev => prev.filter(m => m._id !== id));
+        showToast('Dish item removed from menu list.', 'success');
+      } else {
+        showToast('Failed to delete dish menu item.', 'error');
       }
     } catch (err) {
       console.error(err);
+      showToast('Network error deleting menu item.', 'error');
     }
   };
 
   // Dashboard Stats Calculations
   const totalBookings = bookings.length;
-  const pendingBookings = bookings.filter(b => b.status === 'Pending').length;
+  const pendingBookings = bookings.filter(b => b.status === 'Pending');
   const totalSubscribers = subscribers.length;
   const activeOffersCount = offers.filter(o => o.isActive).length;
 
   const totalRevenue = orders
     .filter(o => o.status === 'Delivered')
     .reduce((acc, o) => acc + o.totalAmount, 0);
-  const activeOrdersCount = orders
-    .filter(o => o.status !== 'Delivered' && o.status !== 'Cancelled')
-    .length;
+  const activeOrders = orders.filter(o => o.status !== 'Delivered' && o.status !== 'Cancelled');
+  const activeOrdersCount = activeOrders.length;
   const pendingOrdersCount = orders.filter(o => o.status === 'Pending').length;
+  const displayedOrders = showAllOrders ? orders : activeOrders;
 
 
   // Seating Zone Stats
@@ -447,7 +506,7 @@ export const AdminDashboard = () => {
             <div>
               <span style={{ display: 'block', fontSize: '12px', color: 'var(--color-text-muted)' }}>Reservations</span>
               <strong style={{ fontSize: '22px', color: '#FFF' }}>{totalBookings}</strong>
-              <span style={{ display: 'block', fontSize: '10px', color: 'var(--color-accent-gold)' }}>{pendingBookings} pending approval</span>
+              <span style={{ display: 'block', fontSize: '10px', color: 'var(--color-accent-gold)' }}>{pendingBookings.length} pending approval</span>
             </div>
           </div>
 
@@ -584,16 +643,15 @@ export const AdminDashboard = () => {
         </div>
 
         {/* 2. Sub-navigation tabs */}
-        <div className="filter-tabs" style={{ marginBottom: '30px', borderBottom: '1px solid rgba(255, 255, 255, 0.05)', paddingBottom: '16px' }}>
+        <div className="filter-tabs" style={{ marginBottom: '30px', borderBottom: '1px solid rgba(255, 255, 255, 0.05)', paddingBottom: '16px', display: 'flex', flexWrap: 'wrap', gap: '10px' }}>
           {[
-            { id: 'orders', name: 'Orders Manager' },
-            { id: 'bookings', name: 'Reservations Manager' },
+            { id: 'orders', name: `Orders Queue (${activeOrdersCount})` },
+            { id: 'reservations', name: `Table Bookings (${pendingBookings.length} pending)` },
             { id: 'menu', name: 'Menu Editor (CRUD)' },
             { id: 'offers', name: 'Offers & Banners' },
             { id: 'reviews', name: 'Review Moderator' },
             { id: 'subscribers', name: 'Subscribers List' }
           ].map(tab => (
-
             <button
               key={tab.id}
               onClick={() => setActiveTab(tab.id)}
@@ -608,130 +666,232 @@ export const AdminDashboard = () => {
         {loading ? (
           <div style={{ textAlign: 'center', padding: '60px 0', color: 'var(--color-text-muted)' }}>Syncing secure dashboard channels...</div>
         ) : (
-          <div className="glass-card" style={{ padding: '24px', overflowX: 'auto' }}>
-            
-            {/* TAB 0: ORDERS */}
+          <div className="glass-card" style={{ padding: '24px', overflow: activeTab === 'orders' ? 'visible' : 'auto' }}>
+
+            {/* TAB A: ORDERS DISPATCH QUEUE */}
             {activeTab === 'orders' && (
               <div>
-                <h3 style={{ fontSize: '20px', color: '#FFF', marginBottom: '20px' }}>Customer Orders</h3>
-                {orders.length === 0 ? (
-                  <div style={{ color: 'var(--color-text-muted)', textAlign: 'center', padding: '20px' }}>No order records found.</div>
+                <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '25px', flexWrap: 'wrap', gap: '15px' }}>
+                  <div>
+                    <h3 style={{ fontSize: '20px', color: '#FFF', margin: 0 }}>Orders Queue</h3>
+                    <p style={{ fontSize: '12px', color: 'var(--color-text-muted)', margin: '4px 0 0 0' }}>
+                      {showAllOrders ? 'Showing all order history' : `Showing active orders awaiting preparation/dispatch`}
+                    </p>
+                  </div>
+                  
+                  <div style={{ display: 'flex', gap: '10px' }}>
+                    <button 
+                      onClick={() => setShowAllOrders(!showAllOrders)} 
+                      className={`btn ${showAllOrders ? 'btn-primary' : 'btn-secondary'}`}
+                      style={{ padding: '8px 16px', fontSize: '12px' }}
+                    >
+                      {showAllOrders ? 'Show Active Only' : 'Show All Orders'}
+                    </button>
+                    <button 
+                      onClick={() => fetchData(true)} 
+                      className="btn btn-secondary" 
+                      style={{ padding: '8px 16px', fontSize: '12px', display: 'flex', alignItems: 'center', gap: '6px' }}
+                    >
+                      <RefreshCw size={12} /> Sync Feeds
+                    </button>
+                  </div>
+                </div>
+
+                {displayedOrders.length === 0 ? (
+                  <div style={{ padding: '60px 20px', textAlign: 'center', color: 'var(--color-text-muted)' }}>
+                    <CheckCircle size={48} style={{ color: '#4ADE80', marginBottom: '15px', strokeWidth: 1.5 }} />
+                    <h4 style={{ color: '#FFF', fontSize: '18px', marginBottom: '8px' }}>Orders Dispatch Clear</h4>
+                    <p style={{ fontSize: '13px' }}>No active orders in dispatch station at the moment.</p>
+                  </div>
                 ) : (
-                  <table style={{ width: '100%', borderCollapse: 'collapse', textAlign: 'left', fontSize: '14px' }} className="admin-table">
-                    <thead>
-                      <tr style={{ borderBottom: '1px solid rgba(255, 255, 255, 0.08)', color: 'var(--color-accent-gold)' }}>
-                        <th style={{ padding: '12px' }}>Customer</th>
-                        <th style={{ padding: '12px' }}>Address</th>
-                        <th style={{ padding: '12px' }}>Items</th>
-                        <th style={{ padding: '12px' }}>Total Amount</th>
-                        <th style={{ padding: '12px' }}>Status</th>
-                        <th style={{ padding: '12px', textAlign: 'right' }}>Actions</th>
-                      </tr>
-                    </thead>
-                    <tbody>
-                      {orders.map(o => (
-                        <tr key={o._id} style={{ borderBottom: '1px solid rgba(255, 255, 255, 0.04)' }}>
-                          <td style={{ padding: '12px' }}>
-                            <div style={{ fontWeight: 600, color: '#FFF' }}>{o.customerName}</div>
-                            <div style={{ fontSize: '11px', color: 'var(--color-text-muted)' }}>{o.phone} | {o.email}</div>
-                            <div style={{ fontSize: '10px', color: 'var(--color-primary)', marginTop: '4px' }}>
-                              {new Date(o.createdAt).toLocaleString()}
-                            </div>
-                          </td>
-                          <td style={{ padding: '12px', color: 'var(--color-text-light)', fontSize: '13px', maxWidth: '180px' }}>
-                            {o.deliveryAddress}
-                          </td>
-                          <td style={{ padding: '12px', fontSize: '13px' }}>
-                            <ul style={{ listStyle: 'none', padding: 0, margin: 0, display: 'flex', flexDirection: 'column', gap: '4px' }}>
-                              {o.items.map((item, idx) => (
-                                <li key={idx} style={{ color: 'var(--color-text-light)' }}>
-                                  <span style={{ color: 'var(--color-primary)', fontWeight: 600 }}>{item.quantity}x</span> {item.name} <span style={{ color: 'var(--color-text-muted)' }}>(${item.price})</span>
-                                </li>
-                              ))}
-                            </ul>
-                          </td>
-                          <td style={{ padding: '12px', fontWeight: 700, color: 'var(--color-accent-gold)', fontSize: '15px' }}>
-                            ${o.totalAmount}
-                          </td>
-                          <td style={{ padding: '12px' }}>
-                            <span style={{
-                              padding: '4px 8px',
-                              borderRadius: '20px',
-                              fontSize: '11px',
-                              fontWeight: 600,
-                              background: o.status === 'Delivered' ? 'rgba(74, 222, 128, 0.1)' : o.status === 'Cancelled' ? 'rgba(248, 113, 113, 0.1)' : o.status === 'Preparing' ? 'rgba(59, 130, 246, 0.1)' : o.status === 'Out for Delivery' ? 'rgba(167, 139, 250, 0.1)' : 'rgba(251, 191, 36, 0.1)',
-                              color: o.status === 'Delivered' ? '#4ADE80' : o.status === 'Cancelled' ? '#F87171' : o.status === 'Preparing' ? '#3B82F6' : o.status === 'Out for Delivery' ? '#A78BFA' : '#FBBF24'
-                            }}>
-                              {o.status}
-                            </span>
-                          </td>
-                          <td style={{ padding: '12px', textAlign: 'right' }}>
-                            <div style={{ display: 'inline-flex', gap: '10px', alignItems: 'center' }}>
-                              <select
-                                value={o.status}
-                                onChange={(e) => handleUpdateOrderStatus(o._id, e.target.value)}
-                                style={{
-                                  background: 'rgba(255,255,255,0.03)',
-                                  border: '1px solid rgba(255,255,255,0.08)',
-                                  borderRadius: '6px',
-                                  color: '#FFF',
-                                  fontSize: '12px',
-                                  padding: '5px 10px',
-                                  cursor: 'pointer'
-                                }}
+                  <div style={{ display: 'grid', gridTemplateColumns: 'repeat(2, 1fr)', gap: '25px' }} className="grid-2">
+                    {displayedOrders.map(o => (
+                      <div key={o._id} className="glass-card" style={{
+                        display: 'flex',
+                        flexDirection: 'column',
+                        justifyContent: 'space-between',
+                        padding: '24px',
+                        border: o.status === 'Pending' ? '1px solid rgba(251, 191, 36, 0.25)' : '1px solid rgba(255,255,255,0.06)',
+                        boxShadow: o.status === 'Pending' ? '0 0 20px rgba(251,191,36,0.05)' : 'none',
+                        animation: 'fadeIn 0.5s ease-out',
+                        position: 'relative'
+                      }}>
+                        
+                        {/* Status Stamp */}
+                        <span style={{
+                          position: 'absolute',
+                          top: '24px',
+                          right: '24px',
+                          padding: '4px 10px',
+                          borderRadius: '20px',
+                          fontSize: '11px',
+                          fontWeight: 700,
+                          textTransform: 'uppercase',
+                          letterSpacing: '1px',
+                          background: o.status === 'Preparing' ? 'rgba(59, 130, 246, 0.12)' : o.status === 'Out for Delivery' ? 'rgba(167, 139, 250, 0.12)' : o.status === 'Delivered' ? 'rgba(16, 185, 129, 0.12)' : o.status === 'Cancelled' ? 'rgba(239, 68, 68, 0.12)' : 'rgba(251, 191, 36, 0.12)',
+                          color: o.status === 'Preparing' ? '#3B82F6' : o.status === 'Out for Delivery' ? '#A78BFA' : o.status === 'Delivered' ? '#10B981' : o.status === 'Cancelled' ? '#EF4444' : '#FBBF24'
+                        }}>
+                          {o.status}
+                        </span>
+
+                        {/* Customer & Time Info */}
+                        <div style={{ marginBottom: '15px' }}>
+                          <span style={{ fontSize: '10px', color: 'var(--color-text-muted)', textTransform: 'uppercase', fontWeight: 700, letterSpacing: '1px' }}>
+                            Order Ref: {o._id.substring(o._id.length - 8).toUpperCase()}
+                          </span>
+                          <h4 style={{ fontSize: '18px', color: '#FFF', margin: '4px 0 2px 0' }}>{o.customerName}</h4>
+                          <span style={{ fontSize: '12px', color: 'var(--color-primary)' }}>
+                            Placed {new Date(o.createdAt).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}
+                          </span>
+                        </div>
+
+                        {/* Order Items list */}
+                        <div style={{
+                          background: 'rgba(255, 255, 255, 0.02)',
+                          border: '1px solid rgba(255, 255, 255, 0.04)',
+                          borderRadius: '8px',
+                          padding: '16px',
+                          margin: '10px 0 20px 0',
+                          flexGrow: 1
+                        }}>
+                          <ul style={{ listStyle: 'none', padding: 0, margin: 0, display: 'flex', flexDirection: 'column', gap: '8px' }}>
+                            {o.items.map((item, idx) => (
+                              <li key={idx} style={{ display: 'flex', justifyBetween: 'space-between', fontSize: '13px' }}>
+                                <span style={{ color: 'var(--color-text-light)', display: 'flex', justifyContent: 'space-between', width: '100%' }}>
+                                  <span><strong style={{ color: 'var(--color-primary)' }}>{item.quantity}x</strong> {item.name}</span>
+                                  <span style={{ color: 'var(--color-text-muted)' }}>${item.price * item.quantity}</span>
+                                </span>
+                              </li>
+                            ))}
+                          </ul>
+                          <div style={{ display: 'flex', justifyContent: 'space-between', borderTop: '1px solid rgba(255, 255, 255, 0.05)', paddingTop: '10px', marginTop: '10px', fontWeight: 700, fontSize: '14px' }}>
+                            <span style={{ color: 'var(--color-text-muted)' }}>Subtotal</span>
+                            <span style={{ color: 'var(--color-accent-gold)' }}>${o.totalAmount}</span>
+                          </div>
+                        </div>
+
+                        {/* Dropoff Address */}
+                        <div style={{ fontSize: '12px', color: 'var(--color-text-muted)', marginBottom: '25px', display: 'flex', gap: '8px' }}>
+                          <Compass size={14} style={{ color: 'var(--color-primary)', flexShrink: 0, marginTop: '2px' }} />
+                          <div>
+                            <strong>Delivery Address:</strong>
+                            <p style={{ margin: '2px 0 0 0', color: 'var(--color-text-light)', lineHeight: '1.4' }}>{o.deliveryAddress}</p>
+                            <p style={{ margin: '2px 0 0 0', color: 'var(--color-text-muted)', fontSize: '11px' }}>Ph: {o.phone}</p>
+                          </div>
+                        </div>
+
+                        {/* Dispatch Actions */}
+                        <div style={{ display: 'flex', gap: '10px', borderTop: '1px solid rgba(255, 255, 255, 0.04)', paddingTop: '16px' }}>
+                          {o.status === 'Pending' && (
+                            <>
+                              <button 
+                                onClick={() => handleUpdateOrderStatus(o._id, 'Preparing')}
+                                className="btn btn-primary"
+                                style={{ flexGrow: 1, padding: '10px', fontSize: '12px' }}
                               >
-                                <option value="Pending" style={{ backgroundColor: '#141412' }}>Pending</option>
-                                <option value="Preparing" style={{ backgroundColor: '#141412' }}>Preparing</option>
-                                <option value="Out for Delivery" style={{ backgroundColor: '#141412' }}>Out for Delivery</option>
-                                <option value="Delivered" style={{ backgroundColor: '#141412' }}>Delivered</option>
-                                <option value="Cancelled" style={{ backgroundColor: '#141412' }}>Cancelled</option>
-                              </select>
-                              
-                              <button onClick={() => handleDeleteOrder(o._id)} title="Delete Record" style={{ background: 'rgba(255,255,255,0.03)', border: '1px solid rgba(255,255,255,0.08)', width: '28px', height: '28px', borderRadius: '4px', color: 'var(--color-text-muted)', cursor: 'pointer', display: 'inline-flex', alignItems: 'center', justifyContent: 'center' }} onMouseEnter={(e) => e.target.style.color = '#F87171'} onMouseLeave={(e) => e.target.style.color = 'var(--color-text-muted)'}>
-                                <Trash2 size={14} style={{ margin: 'auto' }} />
+                                Accept & Prepare
+                              </button>
+                              <button 
+                                onClick={() => handleUpdateOrderStatus(o._id, 'Cancelled')}
+                                className="btn btn-secondary"
+                                style={{ padding: '10px 15px', color: '#F87171', border: '1px solid rgba(248,113,113,0.2)' }}
+                              >
+                                Reject
+                              </button>
+                            </>
+                          )}
+                          {o.status === 'Preparing' && (
+                            <button 
+                              onClick={() => handleUpdateOrderStatus(o._id, 'Out for Delivery')}
+                              className="btn btn-primary"
+                              style={{ flexGrow: 1, padding: '10px', fontSize: '12px', background: 'linear-gradient(to right, #8B5CF6, #A78BFA)', border: 'none' }}
+                            >
+                              Dispatch Order for Delivery
+                            </button>
+                          )}
+                          {o.status === 'Out for Delivery' && (
+                            <button 
+                              onClick={() => handleUpdateOrderStatus(o._id, 'Delivered')}
+                              className="btn btn-primary"
+                              style={{ flexGrow: 1, padding: '10px', fontSize: '12px', background: 'linear-gradient(to right, #10B981, #34D399)', border: 'none' }}
+                            >
+                              Confirm Delivered
+                            </button>
+                          )}
+                          {(o.status === 'Delivered' || o.status === 'Cancelled') && (
+                            <div style={{ display: 'flex', justifyContent: 'space-between', width: '100%', alignItems: 'center' }}>
+                              <span style={{ fontSize: '12px', color: 'var(--color-text-muted)', fontStyle: 'italic' }}>
+                                Order Archived
+                              </span>
+                              <button 
+                                onClick={() => handleDeleteOrder(o._id)}
+                                className="btn btn-secondary"
+                                style={{ padding: '6px 12px', fontSize: '11px', color: '#F87171', border: '1px solid rgba(248,113,113,0.2)' }}
+                              >
+                                Delete Record
                               </button>
                             </div>
-                          </td>
-                        </tr>
-                      ))}
-                    </tbody>
-                  </table>
+                          )}
+                        </div>
+
+                      </div>
+                    ))}
+                  </div>
                 )}
               </div>
             )}
 
-            {/* TAB A: RESERVATIONS */}
-            {activeTab === 'bookings' && (
-
+            {/* TAB A2: RESERVATIONS SEATING */}
+            {activeTab === 'reservations' && (
               <div>
-                <h3 style={{ fontSize: '20px', color: '#FFF', marginBottom: '20px' }}>Active Reservations</h3>
+                <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '25px' }}>
+                  <div>
+                    <h3 style={{ fontSize: '20px', color: '#FFF', margin: 0 }}>Seating Bookings</h3>
+                    <p style={{ fontSize: '12px', color: 'var(--color-text-muted)', margin: '4px 0 0 0' }}>
+                      Review table reservation requests, seat availability, and confirmation statuses.
+                    </p>
+                  </div>
+                  <button onClick={() => fetchData(true)} className="btn btn-secondary" style={{ padding: '8px 16px', fontSize: '12px' }}>
+                    Sync Reservations
+                  </button>
+                </div>
+
                 {bookings.length === 0 ? (
-                  <div style={{ color: 'var(--color-text-muted)', textAlign: 'center', padding: '20px' }}>No guest bookings recorded.</div>
+                  <div style={{ padding: '40px', textAlign: 'center', color: 'var(--color-text-muted)' }}>
+                    No seating reservations recorded.
+                  </div>
                 ) : (
                   <table style={{ width: '100%', borderCollapse: 'collapse', textAlign: 'left', fontSize: '14px' }} className="admin-table">
                     <thead>
                       <tr style={{ borderBottom: '1px solid rgba(255, 255, 255, 0.08)', color: 'var(--color-accent-gold)' }}>
                         <th style={{ padding: '12px' }}>Patron</th>
-                        <th style={{ padding: '12px' }}>Date/Time</th>
-                        <th style={{ padding: '12px' }}>Guests</th>
+                        <th style={{ padding: '12px' }}>Time & Date</th>
+                        <th style={{ padding: '12px' }}>Guests count</th>
                         <th style={{ padding: '12px' }}>Zone</th>
-                        <th style={{ padding: '12px' }}>Status</th>
+                        <th style={{ padding: '12px' }}>Booking Status</th>
                         <th style={{ padding: '12px', textAlign: 'right' }}>Actions</th>
                       </tr>
                     </thead>
                     <tbody>
                       {bookings.map(b => (
-                        <tr key={b._id} style={{ borderBottom: '1px solid rgba(255, 255, 255, 0.04)' }}>
+                        <tr key={b._id} style={{ borderBottom: '1px solid rgba(255, 255, 255, 0.04)', background: b.status === 'Pending' ? 'rgba(251,191,36,0.01)' : 'transparent' }}>
                           <td style={{ padding: '12px' }}>
                             <div style={{ fontWeight: 600, color: '#FFF' }}>{b.name}</div>
                             <div style={{ fontSize: '11px', color: 'var(--color-text-muted)' }}>{b.phone} | {b.email}</div>
                           </td>
                           <td style={{ padding: '12px' }}>
-                            <div>{new Date(b.date).toLocaleDateString()}</div>
-                            <div style={{ fontSize: '11px', color: 'var(--color-primary)' }}>{b.time}</div>
+                            <div>{new Date(b.date).toLocaleDateString(undefined, { weekday: 'short', month: 'short', day: 'numeric' })}</div>
+                            <div style={{ fontSize: '11px', color: 'var(--color-primary)', fontWeight: 600 }}>{b.time}</div>
                           </td>
-                          <td style={{ padding: '12px', fontWeight: 600 }}>{b.guests} Person(s)</td>
-                          <td style={{ padding: '12px' }}>{b.seatingArea}</td>
+                          <td style={{ padding: '12px', fontWeight: 600 }}>
+                            <span style={{ display: 'inline-flex', alignItems: 'center', gap: '6px' }}>
+                              <Users size={14} style={{ color: 'var(--color-primary)' }} />
+                              {b.guests} Guests
+                            </span>
+                          </td>
+                          <td style={{ padding: '12px', color: 'var(--color-text-light)' }}>
+                            {b.seatingArea}
+                          </td>
                           <td style={{ padding: '12px' }}>
                             <span style={{
                               padding: '4px 8px',
@@ -745,20 +905,40 @@ export const AdminDashboard = () => {
                             </span>
                           </td>
                           <td style={{ padding: '12px', textAlign: 'right' }}>
-                            <div style={{ display: 'inline-flex', gap: '8px' }}>
-                              {b.status === 'Pending' && (
+                            <div style={{ display: 'inline-flex', gap: '8px', alignItems: 'center' }}>
+                              {b.status === 'Pending' ? (
                                 <>
-                                  <button onClick={() => handleUpdateBookingStatus(b._id, 'Confirmed')} title="Confirm" style={{ background: '#10B981', border: 'none', width: '28px', height: '28px', borderRadius: '4px', color: '#FFF', cursor: 'pointer', display: 'inline-flex', alignItems: 'center', justifyContent: 'center' }}>
+                                  <button 
+                                    onClick={() => handleUpdateBookingStatus(b._id, 'Confirmed')} 
+                                    title="Confirm Booking" 
+                                    style={{ background: '#10B981', border: 'none', width: '28px', height: '28px', borderRadius: '4px', color: '#FFF', cursor: 'pointer', display: 'inline-flex', alignItems: 'center', justifyContent: 'center' }}
+                                  >
                                     <Check size={14} />
                                   </button>
-                                  <button onClick={() => handleUpdateBookingStatus(b._id, 'Cancelled')} title="Cancel" style={{ background: '#EF4444', border: 'none', width: '28px', height: '28px', borderRadius: '4px', color: '#FFF', cursor: 'pointer', display: 'inline-flex', alignItems: 'center', justifyContent: 'center' }}>
+                                  <button 
+                                    onClick={() => handleUpdateBookingStatus(b._id, 'Cancelled')} 
+                                    title="Reject Reservation" 
+                                    style={{ background: '#EF4444', border: 'none', width: '28px', height: '28px', borderRadius: '4px', color: '#FFF', cursor: 'pointer', display: 'inline-flex', alignItems: 'center', justifyContent: 'center' }}
+                                  >
                                     <X size={14} />
                                   </button>
                                 </>
+                              ) : (
+                                <>
+                                  <span style={{ fontSize: '11px', color: 'var(--color-text-muted)', fontStyle: 'italic', marginRight: '5px' }}>
+                                    Resolved
+                                  </span>
+                                  <button 
+                                    onClick={() => handleDeleteBooking(b._id)} 
+                                    title="Delete Reservation" 
+                                    style={{ background: 'rgba(255,255,255,0.03)', border: '1px solid rgba(255,255,255,0.08)', width: '28px', height: '28px', borderRadius: '4px', color: 'var(--color-text-muted)', cursor: 'pointer', display: 'inline-flex', alignItems: 'center', justifyContent: 'center' }}
+                                    onMouseEnter={(e) => e.currentTarget.style.color = '#EF4444'} 
+                                    onMouseLeave={(e) => e.currentTarget.style.color = 'var(--color-text-muted)'}
+                                  >
+                                    <Trash2 size={13} />
+                                  </button>
+                                </>
                               )}
-                              <button onClick={() => handleDeleteBooking(b._id)} title="Delete Record" style={{ background: 'rgba(255,255,255,0.03)', border: '1px solid rgba(255,255,255,0.08)', width: '28px', height: '28px', borderRadius: '4px', color: 'var(--color-text-muted)', cursor: 'pointer', display: 'inline-flex', alignItems: 'center', justifyContent: 'center' }} onMouseEnter={(e) => e.target.style.color = '#F87171'} onMouseLeave={(e) => e.target.style.color = 'var(--color-text-muted)'}>
-                                <Trash2 size={14} />
-                              </button>
                             </div>
                           </td>
                         </tr>

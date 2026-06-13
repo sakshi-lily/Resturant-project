@@ -1,7 +1,8 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Calendar, Users, Clock, Compass, CheckCircle } from 'lucide-react';
 import GlassModal from '../components/GlassModal';
 import { useToast } from '../context/ToastContext';
+import { useAuth } from '../context/AuthContext';
 import { API_URL } from '../config';
 
 
@@ -11,6 +12,8 @@ export const Reservation = () => {
     tomorrow.setDate(tomorrow.getDate() + 1);
     return tomorrow.toISOString().split('T')[0];
   };
+
+  const { user } = useAuth();
 
   const [formData, setFormData] = useState({
     name: '',
@@ -28,6 +31,16 @@ export const Reservation = () => {
 
   const { showToast } = useToast();
   const timeSlots = ['5:00 PM', '5:30 PM', '6:00 PM', '6:30 PM', '7:00 PM', '7:30 PM', '8:00 PM', '8:30 PM', '9:00 PM', '9:30 PM'];
+
+  useEffect(() => {
+    if (user) {
+      setFormData(prev => ({
+        ...prev,
+        name: user.name || '',
+        email: user.email || ''
+      }));
+    }
+  }, [user]);
 
   const seatingAreas = [
     {

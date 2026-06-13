@@ -23,6 +23,7 @@ import Contact from './pages/Contact';
 import AdminDashboard from './pages/AdminDashboard';
 import Login from './pages/Login';
 import Register from './pages/Register';
+import CustomerDashboard from './pages/CustomerDashboard';
 
 // Route Guards
 import ProtectedRoute from './components/ProtectedRoute';
@@ -112,8 +113,14 @@ function App() {
                 <Route path="/login" element={<Login />} />
                 <Route path="/register" element={<Register />} />
                 <Route path="/admin" element={
-                  <ProtectedRoute>
+                  <ProtectedRoute adminOnly={true}>
                     <AdminDashboard />
+                  </ProtectedRoute>
+                } />
+
+                <Route path="/dashboard" element={
+                  <ProtectedRoute adminOnly={false}>
+                    <CustomerDashboard />
                   </ProtectedRoute>
                 } />
               </Routes>

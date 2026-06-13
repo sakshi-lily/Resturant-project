@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { Link, useLocation } from 'react-router-dom';
-import { Menu, X, UtensilsCrossed, ShieldAlert, ShoppingCart } from 'lucide-react';
+import { Menu, X, UtensilsCrossed, ShieldAlert, ShoppingCart, Clock, User } from 'lucide-react';
 import { useAuth } from '../context/AuthContext';
 import { useCart } from '../context/CartContext';
 
@@ -152,13 +152,20 @@ export const Navbar = () => {
 
           {user ? (
             <>
-              {user.role === 'admin' && (
-                <Link to="/admin" className="btn btn-secondary" style={{ padding: '8px 16px', fontSize: '13px', display: 'flex', alignItems: 'center', gap: '6px' }}>
-                  <ShieldAlert size={14} style={{ color: 'var(--color-primary)' }} />
-                  <span>Admin</span>
+              {user.role === 'admin' ? (
+                <>
+                  <Link to="/admin" className="btn btn-secondary" style={{ padding: '8px 12px', fontSize: '12px', display: 'flex', alignItems: 'center', gap: '4px' }}>
+                    <ShieldAlert size={14} style={{ color: 'var(--color-primary)' }} />
+                    <span>Admin Panel</span>
+                  </Link>
+                </>
+              ) : (
+                <Link to="/dashboard" className="btn btn-secondary" style={{ padding: '8px 12px', fontSize: '12px', display: 'flex', alignItems: 'center', gap: '4px' }}>
+                  <User size={14} style={{ color: 'var(--color-primary)' }} />
+                  <span>My Dashboard</span>
                 </Link>
               )}
-              <button onClick={logout} className="btn btn-secondary" style={{ padding: '8px 16px', fontSize: '13px', cursor: 'pointer', background: 'transparent', border: '1px solid rgba(255,255,255,0.1)', color: '#FFF' }}>
+              <button onClick={logout} className="btn btn-secondary" style={{ padding: '8px 12px', fontSize: '12px', cursor: 'pointer', background: 'transparent', border: '1px solid rgba(255,255,255,0.1)', color: '#FFF' }}>
                 Sign Out
               </button>
             </>
@@ -267,9 +274,15 @@ export const Navbar = () => {
           <div style={{ display: 'flex', flexDirection: 'column', gap: '15px', marginTop: '20px' }}>
             {user ? (
               <>
-                {user.role === 'admin' && (
-                  <Link to="/admin" onClick={() => setIsOpen(false)} className="btn btn-secondary" style={{ width: '100%' }}>
-                    Admin Panel
+                {user.role === 'admin' ? (
+                  <>
+                    <Link to="/admin" onClick={() => setIsOpen(false)} className="btn btn-secondary" style={{ width: '100%' }}>
+                      Admin Panel
+                    </Link>
+                  </>
+                ) : (
+                  <Link to="/dashboard" onClick={() => setIsOpen(false)} className="btn btn-secondary" style={{ width: '100%' }}>
+                    My Dashboard
                   </Link>
                 )}
                 <button onClick={() => { logout(); setIsOpen(false); }} className="btn btn-secondary" style={{ width: '100%', cursor: 'pointer', background: 'transparent', border: '1px solid rgba(255,255,255,0.1)', color: '#FFF', padding: '10px' }}>

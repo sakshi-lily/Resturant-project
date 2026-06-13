@@ -1,6 +1,7 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useCart } from '../context/CartContext';
 import { X, Trash2, Plus, Minus, ShoppingBag, ArrowRight, CheckCircle, CreditCard } from 'lucide-react';
+import { useAuth } from '../context/AuthContext';
 import { API_URL } from '../config';
 import { useToast } from '../context/ToastContext';
 
@@ -15,6 +16,7 @@ export const CartDrawer = () => {
     clearCart
   } = useCart();
 
+  const { user } = useAuth();
   const [step, setStep] = useState(1); // 1: Cart, 2: Checkout, 3: Success
   const [formData, setFormData] = useState({
     name: '',
@@ -23,6 +25,16 @@ export const CartDrawer = () => {
     address: ''
   });
   const [loading, setLoading] = useState(false);
+
+  useEffect(() => {
+    if (user) {
+      setFormData(prev => ({
+        ...prev,
+        name: user.name || '',
+        email: user.email || ''
+      }));
+    }
+  }, [user, step]);
   const [orderId, setOrderId] = useState('');
   const { showToast } = useToast();
 

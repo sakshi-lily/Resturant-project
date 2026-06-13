@@ -97,4 +97,21 @@ export const deleteOrder = async (req, res) => {
   }
 };
 
-export default { createOrder, getOrders, updateOrderStatus, deleteOrder };
+export const getMyOrders = async (req, res) => {
+  try {
+    if (global.dbFallback) {
+      const orders = jsonDb.get('orders');
+      const myOrders = orders.filter(o => o.email === req.user.email);
+      // Sort by createdAt desc
+      const sorted = [...myOrders].sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt));
+      return res.json(sorted);
+    }
+
+    const myOrders = await Order.find({ email: req.user.email }).sort({ createdAt: -1 });
+    res.json(myOrders);
+  } catch (error) {
+    res.status(500).json({ message: error.message });
+  }
+};
+
+export default { createOrder, getOrders, updateOrderStatus, deleteOrder, getMyOrders };

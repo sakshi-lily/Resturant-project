@@ -2,7 +2,7 @@ import React from 'react';
 import { Navigate } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
 
-export const ProtectedRoute = ({ children }) => {
+export const ProtectedRoute = ({ children, adminOnly = true }) => {
   const { user, loading } = useAuth();
 
   if (loading) {
@@ -29,9 +29,14 @@ export const ProtectedRoute = ({ children }) => {
     );
   }
 
-  // Allow access if logged in and user role is 'admin'
-  if (!user || user.role !== 'admin') {
+  // If not logged in at all, redirect to login page
+  if (!user) {
     return <Navigate to="/login" replace />;
+  }
+
+  // If admin-only route but user is not admin, redirect to home page
+  if (adminOnly && user.role !== 'admin') {
+    return <Navigate to="/" replace />;
   }
 
   return children;

@@ -61,4 +61,22 @@ export const deleteReservation = async (req, res) => {
     res.status(500).json({ message: error.message });
   }
 };
-export default { getReservations, createReservation, updateReservationStatus, deleteReservation };
+
+export const getMyReservations = async (req, res) => {
+  try {
+    if (global.dbFallback) {
+      const bookings = jsonDb.get('reservations');
+      const myBookings = bookings.filter(b => b.email === req.user.email);
+      // Sort by date then time desc
+      const sorted = [...myBookings].sort((a, b) => new Date(b.date) - new Date(a.date));
+      return res.json(sorted);
+    }
+
+    const myBookings = await Reservation.find({ email: req.user.email }).sort({ date: 1, time: 1 });
+    res.json(myBookings);
+  } catch (error) {
+    res.status(500).json({ message: error.message });
+  }
+};
+
+export default { getReservations, createReservation, updateReservationStatus, deleteReservation, getMyReservations };
