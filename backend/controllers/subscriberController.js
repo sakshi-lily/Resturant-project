@@ -30,6 +30,12 @@ export const createSubscriber = async (req, res) => {
       return res.status(201).json(newSub);
     }
     
+    // MongoDB Mode
+    const existing = await Subscriber.findOne({ email: email.toLowerCase() });
+    if (existing) {
+      return res.status(400).json({ message: 'Email is already subscribed' });
+    }
+
     const newSub = new Subscriber({ email: email.toLowerCase() });
     await newSub.save();
     res.status(201).json(newSub);

@@ -20,22 +20,21 @@ export const protect = async (req, res, next) => {
         // Exclude password
         const { password, ...userWithoutPassword } = user;
         req.user = userWithoutPassword;
-        return next();
+      } else {
+        // MongoDB Mode
+        req.user = await User.findById(decoded.id).select('-password');
+        if (!req.user) {
+          return res.status(401).json({ message: 'Not authorized, user not found' });
+        }
       }
-
-      // MongoDB Mode
-      req.user = await User.findById(decoded.id).select('-password');
-      if (!req.user) {
-        return res.status(401).json({ message: 'Not authorized, user not found' });
-      }
-      
-      next();
     } catch (error) {
       console.error('JWT Token Verification Error:', error.message);
-      res.status(401).json({ message: 'Not authorized, token failed' });
+      return res.status(401).json({ message: 'Not authorized, token failed' });
     }
+
+    return next();
   } else {
-    res.status(401).json({ message: 'Not authorized, no token' });
+    return res.status(401).json({ message: 'Not authorized, no token' });
   }
 };
 

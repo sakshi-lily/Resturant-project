@@ -36,7 +36,7 @@ export const registerUser = async (req, res) => {
         name,
         email: emailNormalized,
         password: hashedPassword,
-        role: role || 'user'
+        role: 'user'
       });
 
       return res.status(201).json({
@@ -58,7 +58,7 @@ export const registerUser = async (req, res) => {
       name,
       email: emailNormalized,
       password,
-      role: role || 'user'
+      role: 'user'
     });
 
     res.status(201).json({

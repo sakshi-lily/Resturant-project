@@ -6,7 +6,7 @@ const reviewSchema = new mongoose.Schema({
   comment: { type: String, required: true },
   imageUrl: { type: String, default: '' },
   isFeatured: { type: Boolean, default: false },
-  isApproved: { type: Boolean, default: true },
+  isApproved: { type: Boolean, default: false },
   createdAt: { type: Date, default: Date.now }
 });
 

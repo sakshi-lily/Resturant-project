@@ -28,10 +28,10 @@ export const createReview = async (req, res) => {
   try {
     const { name, rating, comment, imageUrl, isFeatured } = req.body;
     if (global.dbFallback) {
-      const newReview = jsonDb.create('reviews', { name, rating: Number(rating), comment, imageUrl: imageUrl || '', isFeatured: Boolean(isFeatured), isApproved: true });
+      const newReview = jsonDb.create('reviews', { name, rating: Number(rating), comment, imageUrl: imageUrl || '', isFeatured: Boolean(isFeatured), isApproved: false });
       return res.status(201).json(newReview);
     }
-    const newReview = new Review({ name, rating, comment, imageUrl, isFeatured, isApproved: true });
+    const newReview = new Review({ name, rating, comment, imageUrl, isFeatured, isApproved: false });
     await newReview.save();
     res.status(201).json(newReview);
   } catch (error) {
