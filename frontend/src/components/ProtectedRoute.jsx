@@ -29,9 +29,9 @@ export const ProtectedRoute = ({ children, adminOnly = true }) => {
     );
   }
 
-  // If not logged in at all, redirect to login page
+  // If not logged in at all, redirect to the appropriate login page
   if (!user) {
-    return <Navigate to="/login" replace />;
+    return <Navigate to={adminOnly ? "/admin-login" : "/login"} replace />;
   }
 
   // If admin-only route but user is not admin, redirect to home page

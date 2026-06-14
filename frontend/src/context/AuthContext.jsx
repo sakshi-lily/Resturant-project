@@ -69,7 +69,7 @@ export const AuthProvider = ({ children }) => {
           role: data.role
         });
         showToast(`Welcome back, ${data.name}!`, 'success');
-        return { success: true };
+        return { success: true, role: data.role };
       } else {
         showToast(data.message || 'Login failed. Please check credentials.', 'error');
         return { success: false, message: data.message };
@@ -100,7 +100,7 @@ export const AuthProvider = ({ children }) => {
           role: data.role
         });
         showToast('Account registered successfully!', 'success');
-        return { success: true };
+        return { success: true, role: data.role };
       } else {
         showToast(data.message || 'Registration failed.', 'error');
         return { success: false, message: data.message };

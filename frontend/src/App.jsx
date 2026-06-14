@@ -24,6 +24,7 @@ import AdminDashboard from './pages/AdminDashboard';
 import Login from './pages/Login';
 import Register from './pages/Register';
 import CustomerDashboard from './pages/CustomerDashboard';
+import AdminLogin from './pages/AdminLogin';
 
 // Route Guards
 import ProtectedRoute from './components/ProtectedRoute';
@@ -111,6 +112,7 @@ function App() {
                 <Route path="/reviews" element={<Reviews />} />
                 <Route path="/contact" element={<Contact />} />
                 <Route path="/login" element={<Login />} />
+                <Route path="/admin-login" element={<AdminLogin />} />
                 <Route path="/register" element={<Register />} />
                 <Route path="/admin" element={
                   <ProtectedRoute adminOnly={true}>
