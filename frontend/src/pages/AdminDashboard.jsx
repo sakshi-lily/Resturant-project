@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { 
   BarChart3, Calendar, Utensils, MessageSquare, Mail, Check, X, Trash2, 
   Plus, Edit3, Image, ShieldAlert, DollarSign, ShoppingBag, Clock, 
@@ -17,6 +17,8 @@ export const AdminDashboard = () => {
   const { token } = useAuth();
   const { showToast } = useToast();
   const [showAllOrders, setShowAllOrders] = useState(false);
+  const fileInputRef = useRef(null);
+  const [imageInputMode, setImageInputMode] = useState('upload'); // 'upload' or 'url'
   
   // Data States
   const [bookings, setBookings] = useState([]);
@@ -385,6 +387,25 @@ export const AdminDashboard = () => {
     }
   };
 
+  const handleFileChange = (e) => {
+    const file = e.target.files[0];
+    if (!file) return;
+
+    if (file.size > 10 * 1024 * 1024) {
+      showToast('Image file size must be less than 10MB.', 'error');
+      return;
+    }
+
+    const reader = new FileReader();
+    reader.onloadend = () => {
+      setMenuForm(prev => ({ ...prev, imageUrl: reader.result }));
+    };
+    reader.onerror = () => {
+      showToast('Failed to read file.', 'error');
+    };
+    reader.readAsDataURL(file);
+  };
+
   const handleEditMenuClick = (item) => {
     setEditingItem(item);
     setMenuForm({
@@ -396,6 +417,7 @@ export const AdminDashboard = () => {
       isChefSpecial: item.isChefSpecial,
       allergens: item.allergens ? item.allergens.join(', ') : ''
     });
+    setImageInputMode(item.imageUrl && item.imageUrl.startsWith('http') ? 'url' : 'upload');
     setIsMenuModalOpen(true);
   };
 
@@ -954,7 +976,7 @@ export const AdminDashboard = () => {
               <div>
                 <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '20px' }}>
                   <h3 style={{ fontSize: '20px', color: '#FFF' }}>Dishes catalog</h3>
-                  <button onClick={() => { setEditingItem(null); setIsMenuModalOpen(true); }} className="btn btn-primary" style={{ padding: '8px 16px', fontSize: '13px', display: 'flex', alignItems: 'center', gap: '6px' }}>
+                  <button onClick={() => { setEditingItem(null); setImageInputMode('upload'); setIsMenuModalOpen(true); }} className="btn btn-primary" style={{ padding: '8px 16px', fontSize: '13px', display: 'flex', alignItems: 'center', gap: '6px' }}>
                     <Plus size={14} /> Add Menu Item
                   </button>
                 </div>
@@ -1183,16 +1205,107 @@ export const AdminDashboard = () => {
           </div>
 
           <div>
-            <label style={{ display: 'block', fontSize: '12px', color: 'var(--color-text-muted)', marginBottom: '5px' }}>Image URL</label>
-            <input
-              type="text"
-              name="imageUrl"
-              required
-              className="input-field"
-              placeholder="Paste high-res image link"
-              value={menuForm.imageUrl}
-              onChange={(e) => setMenuForm(prev => ({ ...prev, imageUrl: e.target.value }))}
-            />
+            <label style={{ display: 'block', fontSize: '12px', color: 'var(--color-text-muted)', marginBottom: '8px' }}>Dish Image</label>
+            
+            {menuForm.imageUrl ? (
+              <div style={{ position: 'relative', width: '100%', height: '180px', borderRadius: '8px', overflow: 'hidden', border: '1px solid var(--glass-border)', marginBottom: '10px', background: 'rgba(0,0,0,0.2)' }}>
+                <img src={menuForm.imageUrl} alt="Dish Preview" style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
+                <button
+                  type="button"
+                  onClick={() => setMenuForm(prev => ({ ...prev, imageUrl: '' }))}
+                  style={{
+                    position: 'absolute',
+                    top: '12px',
+                    right: '12px',
+                    background: 'rgba(15, 15, 15, 0.85)',
+                    border: '1px solid rgba(255,255,255,0.1)',
+                    borderRadius: '50%',
+                    width: '32px',
+                    height: '32px',
+                    color: '#FFF',
+                    display: 'flex',
+                    alignItems: 'center',
+                    justifyContent: 'center',
+                    cursor: 'pointer',
+                    transition: 'var(--transition-smooth)'
+                  }}
+                  onMouseEnter={(e) => e.currentTarget.style.borderColor = 'var(--color-primary)'}
+                  onMouseLeave={(e) => e.currentTarget.style.borderColor = 'rgba(255,255,255,0.1)'}
+                >
+                  <X size={16} />
+                </button>
+              </div>
+            ) : (
+              <div>
+                <div style={{ display: 'flex', gap: '8px', marginBottom: '12px' }}>
+                  <button
+                    type="button"
+                    className={`filter-tab ${imageInputMode === 'upload' ? 'active' : ''}`}
+                    onClick={() => setImageInputMode('upload')}
+                    style={{ padding: '6px 14px', fontSize: '12px', borderRadius: '20px', border: 'none', cursor: 'pointer' }}
+                  >
+                    Upload File
+                  </button>
+                  <button
+                    type="button"
+                    className={`filter-tab ${imageInputMode === 'url' ? 'active' : ''}`}
+                    onClick={() => setImageInputMode('url')}
+                    style={{ padding: '6px 14px', fontSize: '12px', borderRadius: '20px', border: 'none', cursor: 'pointer' }}
+                  >
+                    Image URL
+                  </button>
+                </div>
+
+                {imageInputMode === 'upload' ? (
+                  <div 
+                    onClick={() => fileInputRef.current?.click()}
+                    style={{
+                      border: '2px dashed var(--glass-border)',
+                      borderRadius: '8px',
+                      padding: '30px 20px',
+                      textAlign: 'center',
+                      cursor: 'pointer',
+                      background: 'rgba(255, 255, 255, 0.01)',
+                      transition: 'var(--transition-smooth)',
+                      display: 'flex',
+                      flexDirection: 'column',
+                      alignItems: 'center',
+                      justifyContent: 'center',
+                      gap: '8px'
+                    }}
+                    onMouseEnter={(e) => { 
+                      e.currentTarget.style.borderColor = 'var(--color-primary)'; 
+                      e.currentTarget.style.background = 'rgba(255, 122, 0, 0.02)'; 
+                    }}
+                    onMouseLeave={(e) => { 
+                      e.currentTarget.style.borderColor = 'var(--glass-border)'; 
+                      e.currentTarget.style.background = 'rgba(255, 255, 255, 0.01)'; 
+                    }}
+                  >
+                    <Image size={28} style={{ color: 'var(--color-primary)' }} />
+                    <div style={{ fontSize: '13px', color: '#FFF', fontWeight: 500 }}>Click to browse image file</div>
+                    <div style={{ fontSize: '11px', color: 'var(--color-text-muted)' }}>Supports PNG, JPG, JPEG, WEBP up to 10MB</div>
+                    <input
+                      type="file"
+                      ref={fileInputRef}
+                      accept="image/*"
+                      style={{ display: 'none' }}
+                      onChange={handleFileChange}
+                    />
+                  </div>
+                ) : (
+                  <input
+                    type="text"
+                    name="imageUrl"
+                    required
+                    className="input-field"
+                    placeholder="Paste high-res image link"
+                    value={menuForm.imageUrl}
+                    onChange={(e) => setMenuForm(prev => ({ ...prev, imageUrl: e.target.value }))}
+                  />
+                )}
+              </div>
+            )}
           </div>
 
           <div>
