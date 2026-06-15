@@ -123,6 +123,8 @@ export const Gallery = () => {
                 <img
                   src={item.url}
                   alt={item.title}
+                  loading="lazy"
+                  decoding="async"
                   style={{
                     width: '100%',
                     height: '100%',

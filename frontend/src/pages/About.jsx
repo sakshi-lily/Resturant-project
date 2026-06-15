@@ -54,7 +54,7 @@ export const About = () => {
                 border: '1px solid rgba(255,107,53,0.15)',
                 height: '400px'
               }}>
-                <img src="https://images.unsplash.com/photo-1550966871-3ed3cdb5ed0c?auto=format&fit=crop&w=800&q=80" alt="Atmospheric room" style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
+                <img src="https://images.unsplash.com/photo-1550966871-3ed3cdb5ed0c?auto=format&fit=crop&w=800&q=80" alt="Atmospheric room" loading="lazy" decoding="async" style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
               </div>
               <div style={{
                 position: 'absolute',
@@ -86,7 +86,7 @@ export const About = () => {
             alignItems: 'center'
           }} className="about-chef">
             <div style={{ borderRadius: '16px', overflow: 'hidden', border: '1px solid rgba(255,107,53,0.15)', height: '420px' }}>
-              <img src="https://images.unsplash.com/photo-1577219491135-ce391730fb2c?auto=format&fit=crop&w=800&q=80" alt="Executive Chef Gordon Sterling plating" style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
+              <img src="https://images.unsplash.com/photo-1577219491135-ce391730fb2c?auto=format&fit=crop&w=800&q=80" alt="Executive Chef Gordon Sterling plating" loading="lazy" decoding="async" style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
             </div>
             
             <div>

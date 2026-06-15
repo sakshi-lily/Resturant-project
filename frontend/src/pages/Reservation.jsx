@@ -355,7 +355,7 @@ export const Reservation = () => {
                   className="seating-option-card"
                 >
                   <div style={{ width: '100px', height: '80px', borderRadius: '8px', overflow: 'hidden', flexShrink: 0 }}>
-                    <img src={area.img} alt={area.name} style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
+                    <img src={area.img} alt={area.name} loading="lazy" decoding="async" style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
                   </div>
                   <div>
                     <h4 style={{ fontSize: '16px', color: formData.seatingArea === area.name ? 'var(--color-primary)' : '#FFF' }}>{area.name}</h4>

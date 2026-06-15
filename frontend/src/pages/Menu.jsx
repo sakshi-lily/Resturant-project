@@ -109,7 +109,7 @@ export const Menu = () => {
                   alignItems: 'center'
                 }} className="popular-card">
                   <div style={{ width: '150px', height: '150px', borderRadius: '12px', overflow: 'hidden', flexShrink: 0 }}>
-                    <img src={item.imageUrl} alt={item.name} style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
+                    <img src={item.imageUrl} alt={item.name} loading="lazy" decoding="async" style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
                   </div>
                   <div>
                     <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', marginBottom: '8px' }}>
@@ -227,7 +227,7 @@ export const Menu = () => {
               {currentItems.map((item) => (
                 <div key={item._id} className="glass-card animate-slide" style={{ padding: 0, overflow: 'hidden' }}>
                   <div style={{ height: '230px', overflow: 'hidden', position: 'relative' }}>
-                    <img src={item.imageUrl} alt={item.name} style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
+                    <img src={item.imageUrl} alt={item.name} loading="lazy" decoding="async" style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
                     <div style={{
                       position: 'absolute',
                       top: '15px',

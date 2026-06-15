@@ -201,7 +201,7 @@ export const CartDrawer = () => {
                     alignItems: 'center'
                   }}>
                     <div style={{ width: '70px', height: '70px', borderRadius: '8px', overflow: 'hidden', flexShrink: 0 }}>
-                      <img src={item.imageUrl} alt={item.name} style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
+                      <img src={item.imageUrl} alt={item.name} decoding="async" style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
                     </div>
                     
                     <div style={{ flexGrow: 1 }}>
