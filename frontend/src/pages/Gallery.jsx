@@ -137,22 +137,22 @@ export const Gallery = () => {
                 {/* Hover overlay */}
                 <div style={{
                   position: 'absolute',
-                  top: 0,
-                  left: 0,
-                  width: '100%',
-                  height: '100%',
-                  background: 'rgba(10, 10, 9, 0.7)',
+                  inset: '12px',
+                  background: 'rgba(10, 10, 9, 0.82)',
+                  border: '1px solid rgba(255, 215, 0, 0.3)',
+                  borderRadius: '8px',
                   opacity: 0,
                   transition: 'var(--transition-smooth)',
                   display: 'flex',
                   flexDirection: 'column',
                   alignItems: 'center',
                   justifyContent: 'center',
-                  padding: '20px'
+                  padding: '20px',
+                  boxShadow: 'inset 0 0 15px rgba(0,0,0,0.6)'
                 }} className="gallery-overlay">
-                  <Eye size={30} style={{ color: 'var(--color-primary)', marginBottom: '10px' }} />
-                  <h3 style={{ fontSize: '18px', color: '#FFF', textAlign: 'center' }}>{item.title}</h3>
-                  <span style={{ fontSize: '11px', color: 'var(--color-accent-gold)', textTransform: 'uppercase', letterSpacing: '1px', marginTop: '4px' }}>
+                  <Eye size={26} style={{ color: 'var(--color-accent-gold)', marginBottom: '8px' }} />
+                  <h3 style={{ fontSize: '16px', color: '#FFF', textAlign: 'center', fontFamily: 'var(--font-headline)' }} className="overlay-title">{item.title}</h3>
+                  <span style={{ fontSize: '10px', color: 'var(--color-text-muted)', textTransform: 'uppercase', letterSpacing: '2px', marginTop: '6px' }}>
                     {item.category}
                   </span>
                 </div>
@@ -183,6 +183,7 @@ export const Gallery = () => {
           }}
         >
           <div
+            className="lightbox-content"
             onClick={(e) => e.stopPropagation()}
             style={{
               position: 'relative',
@@ -191,7 +192,7 @@ export const Gallery = () => {
               borderRadius: '16px',
               overflow: 'hidden',
               boxShadow: 'var(--glass-shadow)',
-              border: '1px solid rgba(255,107,53,0.2)'
+              border: '1px solid rgba(255, 215, 0, 0.2)'
             }}
           >
             <button
@@ -243,11 +244,25 @@ export const Gallery = () => {
       )}
 
       <style>{`
+        @keyframes zoomIn {
+          from { transform: scale(0.92); opacity: 0; }
+          to { transform: scale(1); opacity: 1; }
+        }
+        .lightbox-content {
+          animation: zoomIn 0.35s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+        }
         .gallery-item-wrapper:hover .gallery-img {
           transform: scale(1.06);
         }
         .gallery-item-wrapper:hover .gallery-overlay {
           opacity: 1 !important;
+        }
+        .overlay-title {
+          transform: translateY(12px);
+          transition: transform 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+        }
+        .gallery-item-wrapper:hover .overlay-title {
+          transform: translateY(0);
         }
       `}</style>
     </div>

@@ -21,6 +21,11 @@ export const createSubscriber = async (req, res) => {
       return res.status(400).json({ message: 'Email is required' });
     }
     
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    if (!emailRegex.test(email)) {
+      return res.status(400).json({ message: 'Please provide a valid email address' });
+    }
+    
     if (global.dbFallback) {
       const existing = jsonDb.get('subscribers').find(s => s.email.toLowerCase() === email.toLowerCase());
       if (existing) {

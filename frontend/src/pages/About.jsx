@@ -66,8 +66,7 @@ export const About = () => {
                 borderRadius: '12px',
                 fontWeight: 800,
                 fontSize: '18px',
-                boxShadow: '0 10px 25px rgba(255,107,53,0.3)',
-                display: 'none' // Hidden on smaller sizes handled in styles
+                boxShadow: '0 10px 25px rgba(255,107,53,0.3)'
               }} className="narrative-badge">
                 Est. 2018
               </div>
@@ -154,10 +153,10 @@ export const About = () => {
       </section>
 
       <style>{`
-        @media (max-width: 768px) {
+        @media (max-width: 992px) {
           .about-narrative, .about-chef {
             grid-template-columns: 1fr !important;
-            gap: 30px !important;
+            gap: 35px !important;
           }
           .narrative-badge {
             display: none !important;

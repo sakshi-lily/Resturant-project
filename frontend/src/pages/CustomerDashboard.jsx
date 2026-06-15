@@ -12,6 +12,7 @@ export const CustomerDashboard = () => {
   const [orders, setOrders] = useState([]);
   const [reservations, setReservations] = useState([]);
   const [loading, setLoading] = useState(true);
+  const [hasError, setHasError] = useState(false);
 
   // Forms
   const [profileForm, setProfileForm] = useState({
@@ -49,12 +50,17 @@ export const CustomerDashboard = () => {
 
   const fetchDashboardData = async () => {
     setLoading(true);
+    setHasError(false);
     const headers = { 'Authorization': `Bearer ${token}` };
     try {
       const [ordersRes, reservationsRes] = await Promise.all([
         fetch(`${API_URL}/orders/my-orders`, { headers }),
         fetch(`${API_URL}/reservations/my-reservations`, { headers })
       ]);
+
+      if (!ordersRes.ok || !reservationsRes.ok) {
+        throw new Error('Sync failed');
+      }
 
       const [ordersData, reservationsData] = await Promise.all([
         ordersRes.json(),
@@ -70,6 +76,7 @@ export const CustomerDashboard = () => {
     } catch (err) {
       console.error(err);
       showToast('Error syncing user dashboard records.', 'error');
+      setHasError(true);
     } finally {
       setLoading(false);
     }
@@ -217,9 +224,18 @@ export const CustomerDashboard = () => {
           <div className="glass-card" style={{ padding: '30px' }}>
             
             {loading && activeTab !== 'profile' && activeTab !== 'review' ? (
-              <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', padding: '40px 0', gap: '15px' }}>
-                <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="var(--color-primary)" strokeWidth="3" style={{ animation: 'spin 1s linear infinite' }}><path d="M21 12a9 9 0 1 1-6.219-8.56" /></svg>
+              <div className="loader-container">
+                <div className="spinner-gold"></div>
                 <span style={{ color: 'var(--color-text-muted)', fontSize: '13px' }}>Syncing order databases...</span>
+              </div>
+            ) : hasError && activeTab !== 'profile' && activeTab !== 'review' ? (
+              <div className="error-state">
+                <div className="error-state-icon">⚠️</div>
+                <h3>Database Sync Failed</h3>
+                <p>We could not sync your reservation or order history. Please check your connection.</p>
+                <button onClick={fetchDashboardData} className="btn btn-primary btn-md" style={{ marginTop: '8px' }}>
+                  Retry Sync
+                </button>
               </div>
             ) : (
               <div>

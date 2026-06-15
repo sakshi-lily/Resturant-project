@@ -48,10 +48,33 @@ export const Home = () => {
         minHeight: '700px',
         display: 'flex',
         alignItems: 'center',
-        background: 'linear-gradient(rgba(10, 10, 9, 0.6), rgba(10, 10, 9, 0.9)), url("https://images.unsplash.com/photo-1414235077428-338989a2e8c0?auto=format&fit=crop&w=1600&q=80") no-repeat center center/cover',
         textAlign: 'center',
-        paddingTop: '80px'
+        paddingTop: '80px',
+        overflow: 'hidden'
       }}>
+        {/* Background Image Wrapper with Slow Zoom */}
+        <div style={{
+          position: 'absolute',
+          top: 0,
+          left: 0,
+          width: '100%',
+          height: '100%',
+          zIndex: -2,
+          backgroundImage: 'url("https://images.unsplash.com/photo-1414235077428-338989a2e8c0?auto=format&fit=crop&w=1600&q=80")',
+          backgroundPosition: 'center',
+          backgroundSize: 'cover',
+          animation: 'slowZoom 20s infinite alternate ease-in-out'
+        }} />
+        {/* Dark Overlay */}
+        <div style={{
+          position: 'absolute',
+          top: 0,
+          left: 0,
+          width: '100%',
+          height: '100%',
+          zIndex: -1,
+          background: 'linear-gradient(rgba(10, 10, 9, 0.6), rgba(10, 10, 9, 0.9))'
+        }} />
         <div className="container animate-slide" style={{
           maxWidth: '800px',
           margin: '0 auto',
@@ -154,9 +177,7 @@ export const Home = () => {
                       alt={dish.name}
                       loading="lazy"
                       decoding="async"
-                      style={{ width: '100%', height: '100%', objectFit: 'cover', transition: 'var(--transition-smooth)' }}
-                      onMouseEnter={(e) => e.target.style.transform = 'scale(1.08)'}
-                      onMouseLeave={(e) => e.target.style.transform = 'scale(1)'}
+                      className="home-dish-img"
                     />
                     <div style={{
                       position: 'absolute',
@@ -259,16 +280,29 @@ export const Home = () => {
 
           <div className="grid-3">
             {reviews.map((rev) => (
-              <div key={rev._id} className="testimonial-card">
+              <div key={rev._id} className="testimonial-card" style={{ position: 'relative', overflow: 'hidden' }}>
+                {/* SVG Quote Watermark */}
+                <div style={{
+                  position: 'absolute',
+                  top: '10px',
+                  right: '15px',
+                  opacity: 0.05,
+                  color: 'var(--color-accent-gold)',
+                  pointerEvents: 'none'
+                }}>
+                  <svg width="60" height="60" viewBox="0 0 24 24" fill="currentColor">
+                    <path d="M14.017 21v-7.391c0-5.704 3.731-9.57 8.983-10.609l.995 2.151c-2.432.917-3.995 3.638-3.995 5.849h4v10h-9.983zm-14.017 0v-7.391c0-5.704 3.748-9.57 9-10.609l.996 2.151c-2.433.917-3.996 3.638-3.996 5.849h3.983v10h-9.983z" />
+                  </svg>
+                </div>
                 <div style={{ display: 'flex', gap: '4px', marginBottom: '15px' }}>
                   {[...Array(5)].map((_, idx) => (
                     <Star key={idx} size={16} fill={idx < rev.rating ? 'var(--color-accent-gold)' : 'none'} stroke={idx < rev.rating ? 'var(--color-accent-gold)' : 'rgba(255,255,255,0.2)'} />
                   ))}
                 </div>
-                <p style={{ fontStyle: 'italic', fontSize: '14px', color: 'var(--color-text-light)', marginBottom: '20px', lineHeight: '1.7' }}>
+                <p style={{ fontStyle: 'italic', fontSize: '14px', color: 'var(--color-text-light)', marginBottom: '20px', lineHeight: '1.7', position: 'relative', zIndex: 1 }}>
                   "{rev.comment}"
                 </p>
-                <div>
+                <div style={{ position: 'relative', zIndex: 1 }}>
                   <h4 style={{ fontSize: '15px', color: '#FFF', fontWeight: 600 }}>{rev.name}</h4>
                   <span style={{ fontSize: '11px', color: 'var(--color-primary)', textTransform: 'uppercase', letterSpacing: '1px' }}>Verified Patron</span>
                 </div>
@@ -317,6 +351,15 @@ export const Home = () => {
       </section>
 
       <style>{`
+        .home-dish-img {
+          width: 100%;
+          height: 100%;
+          object-fit: cover;
+          transition: transform 0.6s cubic-bezier(0.16, 1, 0.3, 1);
+        }
+        .glass-card:hover .home-dish-img {
+          transform: scale(1.08);
+        }
         @media (max-width: 992px) {
           .home-gallery-preview {
             grid-template-columns: repeat(2, 1fr) !important;

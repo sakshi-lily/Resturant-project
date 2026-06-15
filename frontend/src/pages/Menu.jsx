@@ -12,6 +12,7 @@ export const Menu = () => {
   const [activeCategory, setActiveCategory] = useState('All');
   const [searchQuery, setSearchQuery] = useState('');
   const [loading, setLoading] = useState(true);
+  const [hasError, setHasError] = useState(false);
   
   // Pagination States
   const [currentPage, setCurrentPage] = useState(1);
@@ -21,10 +22,10 @@ export const Menu = () => {
   const { addToCart } = useCart();
   const categories = ['All', 'Appetizers', 'Mains', 'Desserts', 'Beverages'];
 
-
-  useEffect(() => {
+  const fetchMenu = () => {
+    setLoading(true);
+    setHasError(false);
     fetch(`${API_URL}/menu`)
-
       .then((res) => res.json())
       .then((data) => {
         setMenuItems(data);
@@ -34,8 +35,13 @@ export const Menu = () => {
       .catch((err) => {
         console.error('Failed to fetch menu items', err);
         showToast('Could not load menu items. Operating in offline fallback.', 'error');
+        setHasError(true);
         setLoading(false);
       });
+  };
+
+  useEffect(() => {
+    fetchMenu();
   }, [showToast]);
 
   // Handle live filtering when category or search changes
@@ -109,7 +115,7 @@ export const Menu = () => {
                   alignItems: 'center'
                 }} className="popular-card">
                   <div style={{ width: '150px', height: '150px', borderRadius: '12px', overflow: 'hidden', flexShrink: 0 }}>
-                    <img src={item.imageUrl} alt={item.name} loading="lazy" decoding="async" style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
+                    <img src={item.imageUrl} alt={item.name} loading="lazy" decoding="async" className="menu-card-img" />
                   </div>
                   <div>
                     <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', marginBottom: '8px' }}>
@@ -198,9 +204,21 @@ export const Menu = () => {
         {/* Menu Content */}
         {loading ? (
           /* Premium Loading State */
-          <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', padding: '80px 0', gap: '20px' }}>
-            <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="var(--color-primary)" strokeWidth="3" strokeLinecap="round" strokeLinejoin="round" style={{ animation: 'spin 1s linear infinite' }}><path d="M21 12a9 9 0 1 1-6.219-8.56" /></svg>
+          <div className="loader-container">
+            <div className="spinner-gold"></div>
             <p style={{ color: 'var(--color-text-muted)', fontSize: '15px', fontWeight: 500 }}>Syncing the FlavorNest culinary catalog...</p>
+          </div>
+        ) : hasError ? (
+          /* Premium Error State */
+          <div className="error-state">
+            <div className="error-state-icon">⚠️</div>
+            <h3>Unable to Load Menu</h3>
+            <p>
+              We experienced an issue retrieving our culinary catalog. Please check your connection and try again.
+            </p>
+            <button onClick={fetchMenu} className="btn btn-primary btn-md" style={{ marginTop: '8px' }}>
+              Retry Connection
+            </button>
           </div>
         ) : filteredItems.length === 0 ? (
           /* Premium Empty State */
@@ -227,7 +245,7 @@ export const Menu = () => {
               {currentItems.map((item) => (
                 <div key={item._id} className="glass-card animate-slide" style={{ padding: 0, overflow: 'hidden' }}>
                   <div style={{ height: '230px', overflow: 'hidden', position: 'relative' }}>
-                    <img src={item.imageUrl} alt={item.name} loading="lazy" decoding="async" style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
+                    <img src={item.imageUrl} alt={item.name} loading="lazy" decoding="async" className="menu-card-img" />
                     <div style={{
                       position: 'absolute',
                       top: '15px',
@@ -357,9 +375,15 @@ export const Menu = () => {
       </div>
       
       <style>{`
-        @keyframes spin {
-          0% { transform: rotate(0deg); }
-          100% { transform: rotate(360deg); }
+        .menu-card-img {
+          width: 100%;
+          height: 100%;
+          object-fit: cover;
+          transition: transform 0.6s cubic-bezier(0.16, 1, 0.3, 1);
+        }
+        .glass-card:hover .menu-card-img,
+        .popular-card:hover .menu-card-img {
+          transform: scale(1.08);
         }
         @media (max-width: 768px) {
           .popular-grid {

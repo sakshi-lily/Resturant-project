@@ -65,11 +65,13 @@ export const Contact = () => {
                   width: '40px',
                   height: '40px',
                   borderRadius: '50%',
-                  background: 'rgba(255, 107, 53, 0.1)',
+                  background: 'rgba(255, 215, 0, 0.08)',
+                  boxShadow: '0 0 10px rgba(255, 215, 0, 0.15)',
+                  border: '1px solid rgba(255, 215, 0, 0.2)',
                   display: 'flex',
                   alignItems: 'center',
                   justifyContent: 'center',
-                  color: 'var(--color-primary)'
+                  color: 'var(--color-accent-gold)'
                 }}>
                   <Phone size={18} />
                 </div>
@@ -84,11 +86,13 @@ export const Contact = () => {
                   width: '40px',
                   height: '40px',
                   borderRadius: '50%',
-                  background: 'rgba(255, 107, 53, 0.1)',
+                  background: 'rgba(255, 215, 0, 0.08)',
+                  boxShadow: '0 0 10px rgba(255, 215, 0, 0.15)',
+                  border: '1px solid rgba(255, 215, 0, 0.2)',
                   display: 'flex',
                   alignItems: 'center',
                   justifyContent: 'center',
-                  color: 'var(--color-primary)'
+                  color: 'var(--color-accent-gold)'
                 }}>
                   <Mail size={18} />
                 </div>
@@ -103,11 +107,13 @@ export const Contact = () => {
                   width: '40px',
                   height: '40px',
                   borderRadius: '50%',
-                  background: 'rgba(255, 107, 53, 0.1)',
+                  background: 'rgba(255, 215, 0, 0.08)',
+                  boxShadow: '0 0 10px rgba(255, 215, 0, 0.15)',
+                  border: '1px solid rgba(255, 215, 0, 0.2)',
                   display: 'flex',
                   alignItems: 'center',
                   justifyContent: 'center',
-                  color: 'var(--color-primary)'
+                  color: 'var(--color-accent-gold)'
                 }}>
                   <MapPin size={18} />
                 </div>
@@ -241,9 +247,17 @@ export const Contact = () => {
             justifyContent: 'center',
             position: 'relative'
           }} className="dark-map-wrapper">
-            <div className="glass-card animate-fade" style={{ maxWidth: '300px', textAlign: 'center' }}>
-              <MapPin size={24} style={{ color: 'var(--color-primary)', marginBottom: '8px', margin: '0 auto' }} />
-              <h4 style={{ fontSize: '16px', color: '#FFF', marginBottom: '5px' }}>FlavorNest Manhattan</h4>
+            <div className="glass-card animate-fade" style={{
+              maxWidth: '320px',
+              textAlign: 'center',
+              background: 'rgba(10, 10, 9, 0.85)',
+              backdropFilter: 'blur(16px)',
+              WebkitBackdropFilter: 'blur(16px)',
+              border: '1px solid rgba(255, 215, 0, 0.25)',
+              boxShadow: '0 15px 35px rgba(0,0,0,0.8), 0 0 15px rgba(255, 122, 0, 0.1)'
+            }}>
+              <MapPin size={24} style={{ color: 'var(--color-accent-gold)', marginBottom: '8px', margin: '0 auto' }} />
+              <h4 style={{ fontSize: '16px', color: '#FFF', marginBottom: '5px', fontFamily: 'var(--font-headline)' }}>FlavorNest Manhattan</h4>
               <p style={{ fontSize: '12px', color: 'var(--color-text-muted)', lineHeight: '1.4' }}>742 Culinary Lane, Suite 100, New York</p>
               <a
                 href="https://google.com/maps"

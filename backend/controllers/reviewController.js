@@ -27,6 +27,13 @@ export const getReviews = async (req, res) => {
 export const createReview = async (req, res) => {
   try {
     const { name, rating, comment, imageUrl, isFeatured } = req.body;
+    if (!name || rating === undefined || !comment) {
+      return res.status(400).json({ message: 'Name, rating, and comment are required' });
+    }
+    const numRating = Number(rating);
+    if (isNaN(numRating) || numRating < 1 || numRating > 5) {
+      return res.status(400).json({ message: 'Rating must be a number between 1 and 5' });
+    }
     if (global.dbFallback) {
       const newReview = jsonDb.create('reviews', { name, rating: Number(rating), comment, imageUrl: imageUrl || '', isFeatured: Boolean(isFeatured), isApproved: false });
       return res.status(201).json(newReview);

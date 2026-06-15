@@ -17,6 +17,13 @@ export const getMenuItems = async (req, res) => {
 export const createMenuItem = async (req, res) => {
   try {
     const { name, description, price, category, imageUrl, isChefSpecial, allergens } = req.body;
+    if (!name || !description || price === undefined || !category || !imageUrl) {
+      return res.status(400).json({ message: 'Name, description, price, category, and imageUrl are required' });
+    }
+    const numPrice = Number(price);
+    if (isNaN(numPrice) || numPrice <= 0) {
+      return res.status(400).json({ message: 'Price must be a positive number' });
+    }
     if (global.dbFallback) {
       const newItem = jsonDb.create('menuItems', { name, description, price: Number(price), category, imageUrl, isChefSpecial: Boolean(isChefSpecial), allergens: allergens || [] });
       return res.status(201).json(newItem);

@@ -76,17 +76,57 @@ export const Reservation = () => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    if (!formData.time) {
-      setErrorMessage('Please choose a dining time slot.');
-      showToast('Please select a dining time slot.', 'error');
+    setErrorMessage('');
+
+    // 1. Name validation
+    if (formData.name.trim().length < 2) {
+      const err = 'Your name must be at least 2 characters.';
+      setErrorMessage(err);
+      showToast(err, 'error');
       return;
     }
-    setErrorMessage('');
+
+    // 2. Email validation
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    if (!emailRegex.test(formData.email)) {
+      const err = 'Please enter a valid email address.';
+      setErrorMessage(err);
+      showToast(err, 'error');
+      return;
+    }
+
+    // 3. Phone validation
+    const phoneRegex = /^[\d\s+\-()]{7,}$/;
+    if (!phoneRegex.test(formData.phone)) {
+      const err = 'Please enter a valid phone number (minimum 7 digits).';
+      setErrorMessage(err);
+      showToast(err, 'error');
+      return;
+    }
+
+    // 4. Date validation (not in the past)
+    const selectedDate = new Date(formData.date + 'T00:00:00');
+    const today = new Date();
+    today.setHours(0, 0, 0, 0);
+    if (selectedDate < today) {
+      const err = 'Dining dates cannot be in the past.';
+      setErrorMessage(err);
+      showToast(err, 'error');
+      return;
+    }
+
+    // 5. Time slot validation
+    if (!formData.time) {
+      const err = 'Please choose a dining time slot.';
+      setErrorMessage(err);
+      showToast(err, 'error');
+      return;
+    }
+
     setBookingStatus('loading');
 
     try {
       const response = await fetch(`${API_URL}/reservations`, {
-
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -256,6 +296,7 @@ export const Reservation = () => {
                         color: formData.guests === num ? 'var(--color-primary)' : 'var(--color-text-muted)',
                         cursor: 'pointer',
                         fontWeight: 600,
+                        boxShadow: formData.guests === num ? '0 0 10px rgba(255, 122, 0, 0.3)' : 'none',
                         transition: 'var(--transition-smooth)'
                       }}
                       aria-label={`${num} guests shortcut`}

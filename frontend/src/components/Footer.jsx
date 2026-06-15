@@ -60,7 +60,7 @@ export const Footer = () => {
               fontSize: '24px',
               marginBottom: '20px'
             }}>
-              Flavor<span style={{ color: 'var(--color-primary)' }}>Nest</span>
+              Flavor<span style={{ color: 'var(--color-accent-gold)' }}>Nest</span>
             </h3>
             <p style={{ marginBottom: '24px', lineHeight: '1.7' }}>
               Experience the pinnacle of culinary artistry, where fresh organic ingredients are sculpted into memorable culinary masterpieces.
@@ -149,7 +149,8 @@ export const Footer = () => {
                 style={{
                   position: 'absolute',
                   right: '5px',
-                  top: '5px',
+                  top: '50%',
+                  transform: 'translateY(-50%)',
                   width: '38px',
                   height: '38px',
                   borderRadius: '6px',
@@ -208,6 +209,12 @@ export const Footer = () => {
           background: var(--color-primary) !important;
           border-color: var(--color-primary) !important;
           transform: translateY(-3px);
+        }
+        footer a {
+          transition: var(--transition-smooth);
+        }
+        footer a:hover {
+          color: var(--color-accent-gold) !important;
         }
         @media (max-width: 992px) {
           .footer-grid {

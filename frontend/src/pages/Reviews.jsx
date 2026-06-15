@@ -7,6 +7,7 @@ import { API_URL } from '../config';
 export const Reviews = () => {
   const [reviews, setReviews] = useState([]);
   const [loading, setLoading] = useState(true);
+  const [hasError, setHasError] = useState(false);
   const [isModalOpen, setIsModalOpen] = useState(false);
   
   const [reviewForm, setReviewForm] = useState({
@@ -19,15 +20,20 @@ export const Reviews = () => {
   const [formStatus, setFormStatus] = useState('idle'); // idle, loading, success, error
 
   const fetchReviews = () => {
+    setLoading(true);
+    setHasError(false);
     fetch(`${API_URL}/reviews?approvedOnly=true`)
-
-      .then(res => res.json())
+      .then(res => {
+        if (!res.ok) throw new Error('Failed to fetch reviews');
+        return res.json();
+      })
       .then(data => {
         setReviews(data);
         setLoading(false);
       })
       .catch(err => {
         console.error(err);
+        setHasError(true);
         setLoading(false);
       });
   };
@@ -165,10 +171,29 @@ export const Reviews = () => {
 
         {/* Reviews List */}
         {loading ? (
-          <div style={{ textAlign: 'center', color: 'var(--color-text-muted)' }}>Loading guest feedback portal...</div>
+          <div className="loader-container">
+            <div className="spinner-gold"></div>
+            <p style={{ color: 'var(--color-text-muted)', fontSize: '15px' }}>Syncing the FlavorNest guest feedback portal...</p>
+          </div>
+        ) : hasError ? (
+          <div className="error-state" style={{ margin: '20px auto' }}>
+            <div className="error-state-icon">⚠️</div>
+            <h3>Unable to Load Reviews</h3>
+            <p>
+              We experienced an issue retrieving guest feedback. Please check your connection and try again.
+            </p>
+            <button onClick={fetchReviews} className="btn btn-primary btn-md">
+              Retry Connection
+            </button>
+          </div>
         ) : reviews.length === 0 ? (
-          <div style={{ textAlign: 'center', color: 'var(--color-text-muted)', padding: '40px' }}>
-            No reviews published yet. Be the first to share your dining review!
+          <div className="empty-state" style={{ margin: '20px auto' }}>
+            <div className="empty-state-icon">✍️</div>
+            <h3>No Reviews Published Yet</h3>
+            <p>Be the first to share your fine dining experiences with the world!</p>
+            <button onClick={() => setIsModalOpen(true)} className="btn btn-primary btn-md">
+              Write a Review
+            </button>
           </div>
         ) : (
           <div className="masonry-grid">

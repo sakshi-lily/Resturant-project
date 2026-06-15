@@ -76,8 +76,8 @@ export const Navbar = () => {
           fontFamily: 'var(--font-headline)',
           color: '#FFF'
         }}>
-          <UtensilsCrossed size={24} style={{ color: 'var(--color-primary)' }} />
-          <span>Flavor<span style={{ color: 'var(--color-primary)' }}>Nest</span></span>
+          <UtensilsCrossed size={24} style={{ color: 'var(--color-accent-gold)' }} />
+          <span>Flavor<span style={{ color: 'var(--color-accent-gold)' }}>Nest</span></span>
         </Link>
 
         {/* Desktop Links */}
@@ -90,6 +90,7 @@ export const Navbar = () => {
             <Link
               key={link.name}
               to={link.path}
+              className="sliding-link"
               style={{
                 fontSize: '14px',
                 fontWeight: 500,
