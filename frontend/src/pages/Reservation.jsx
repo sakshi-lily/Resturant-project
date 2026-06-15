@@ -47,17 +47,17 @@ export const Reservation = () => {
     {
       name: 'Indoor Main Room',
       description: 'Elegant ambient lights, warm dining tables.',
-      img: 'https://lh3.googleusercontent.com/aida/AP1WRLu5tg4HFBvcuCvNzJykLKF48XbfLY4H_HL1K3zjjTViSV2x_jOEoNt8Dun-hIyRAaX_rN1JJ_-frDw_NQQ7eKM8QLhzca0OWK2IrB09Gnv6ir34CGA_i7FwGuXmgQs5bSiI7kwWMF2W8-dbPUyBr-BA_wwZJXbRwgQBVoeDAV0DCH5qUd2NrsijZ-6Rc-gegGsSGD3MEyEw8dyP5NX3D8wHoVk1qihWH7Rk_tyQmedYnx8gWxH954QOtgw'
+      img: 'https://images.unsplash.com/photo-1550966871-3ed3cdb5ed0c?auto=format&fit=crop&w=800&q=80'
     },
     {
       name: 'Outdoor Garden Patio',
       description: 'Lush greenery, romantic starlight seating.',
-      img: 'https://lh3.googleusercontent.com/aida/AP1WRLuIimpTFXpS8yHUX1RyqhNBaKDtDmS1rvMOW2n6nuQNWzyeTAE-odZKpCuMUZ_cieX0ro5Lv6fkv_m4UGjAKlWU4zeZK697TGj_4tj5hAa_G3ovBPqZgV4x5QkDMgxQdPzfWZd2f4NLSJXU1uTOH6Nyb86y9GAFeS8YM0AneZr0tpBmh_AcEQPIpU5532DIkG1wrN3AygHtd-l03XBCbD7Pbz9C1sEDpZBkPEKK3MxJ08VGC_i2NKypzDrj'
+      img: 'https://images.unsplash.com/photo-1533777857889-4be7c70b33f7?auto=format&fit=crop&w=800&q=80'
     },
     {
       name: 'Chef\'s Table',
       description: 'Front row seats to live plating, complimentary bubbly.',
-      img: 'https://lh3.googleusercontent.com/aida/AP1WRLvyS5TOznW_SNp06M5Vb7jwMIBLQAVw24EXi2Zvy8dwzOW0iCqBqrYRKCfzouTuqRbVgj622FN87t57-u2xHY7gKYht7cqknuq-azBynAvoLSokQI8lxunrT8bRl1ZOxks-MrPpm-jYB7_63zFmeDCgp5-zOauzDHnFQ9tsLiX76ziV7SM2XioZQQ5sbXeXAYKPEAQCGK2D4z31j-TlQaaqd_4Hu1_l-XgY4y6d2b0EqUwJyT16Rfy0oa0'
+      img: 'https://images.unsplash.com/photo-1577219491135-ce391730fb2c?auto=format&fit=crop&w=800&q=80'
     }
   ];
 

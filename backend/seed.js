@@ -27,7 +27,7 @@ const menuItemsData = [
     description: 'A 45-day dry-aged premium Wagyu ribeye seared with smoked cherrywood crust, fresh herbs, and gold leaf reduction.',
     price: 89,
     category: 'Mains',
-    imageUrl: 'https://lh3.googleusercontent.com/aida/AP1WRLuIimpTFXpS8yHUX1RyqhNBaKDtDmS1rvMOW2n6nuQNWzyeTAE-odZKpCuMUZ_cieX0ro5Lv6fkv_m4UGjAKlWU4zeZK697TGj_4tj5hAa_G3ovBPqZgV4x5QkDMgxQdPzfWZd2f4NLSJXU1uTOH6Nyb86y9GAFeS8YM0AneZr0tpBmh_AcEQPIpU5532DIkG1wrN3AygHtd-l03XBCbD7Pbz9C1sEDpZBkPEKK3MxJ08VGC_i2NKypzDrj',
+    imageUrl: 'https://images.unsplash.com/photo-1544025162-d76694265947?auto=format&fit=crop&w=800&q=80',
     isChefSpecial: true,
     allergens: ['Dairy-Free Available']
   },
@@ -36,7 +36,7 @@ const menuItemsData = [
     description: 'Handmade pasta stuffed with fresh Maine lobster claws, served in a rich saffron-infused brown butter sauce.',
     price: 48,
     category: 'Mains',
-    imageUrl: 'https://lh3.googleusercontent.com/aida/AP1WRLsRg_5gVHQ5c3a1wNveX9dlMZbPHjv6OLexZIr_WRs3_7apBu8L9Al5_1kDf5VQXECWEn8gmN0k-P8qwnd8EAqDDFwJzfXl7eCCHwEAoh_uXWoh1KBsuHWxrlEOwxmmthK4Sj2NLz9ezTkRfBpjlFara9PRZ-Raq0nVnFaXTWazX0Lpuy3b5aSufZXUP8_CXPDEhzuIsQOIje8s_vWWkHYACn7v7wsJcywVE4SUn2lwEWHlIUVyfci7nBtq',
+    imageUrl: 'https://images.unsplash.com/photo-1551183053-bf91a1d81141?auto=format&fit=crop&w=800&q=80',
     isChefSpecial: true,
     allergens: ['Contains Shellfish', 'Gluten']
   },
@@ -45,7 +45,7 @@ const menuItemsData = [
     description: 'Slow-roasted pork belly with cherrywood smoke, served over parsnip puree and drizzled with spicy honey gastrique.',
     price: 22,
     category: 'Appetizers',
-    imageUrl: 'https://lh3.googleusercontent.com/aida/AP1WRLvyS5TOznW_SNp06M5Vb7jwMIBLQAVw24EXi2Zvy8dwzOW0iCqBqrYRKCfzouTuqRbVgj622FN87t57-u2xHY7gKYht7cqknuq-azBynAvoLSokQI8lxunrT8bRl1ZOxks-MrPpm-jYB7_63zFmeDCgp5-zOauzDHnFQ9tsLiX76ziV7SM2XioZQQ5sbXeXAYKPEAQCGK2D4z31j-TlQaaqd_4Hu1_l-XgY4y6d2b0EqUwJyT16Rfy0oa0',
+    imageUrl: 'https://images.unsplash.com/photo-1604908176997-125f25cc6f3d?auto=format&fit=crop&w=800&q=80',
     isChefSpecial: false,
     allergens: ['Gluten-Free']
   },
@@ -54,7 +54,7 @@ const menuItemsData = [
     description: 'Baked to order Grand Marnier orange soufflé, served warm with caramelized orange zest syrup and fresh mint.',
     price: 24,
     category: 'Desserts',
-    imageUrl: 'https://lh3.googleusercontent.com/aida/AP1WRLv3mgwolov7v19ybw1WuOM8jUQJShyjDXlYznmdVhhs_pUMVefGrPnnFCW3Q0oWdAWPVuUxagILINVVBQehlHXfO15pxDVjh4vEiEK0hrkvE5Rh0R7vMcFOOnuzyw9XSdIEPWgU35XykbBmIJVEWAwQYJsLrxOd-odpMdenWXsyFUe183o_2U1DQ5M7RYkDgqKp4nvf1AqtZCV5oELQi2xwSz8-n_xVQzR6nGPwrWiI1HjtRE0pbo2JiWA',
+    imageUrl: 'https://images.unsplash.com/photo-1587314168485-3236d6710814?auto=format&fit=crop&w=800&q=80',
     isChefSpecial: false,
     allergens: ['Vegetarian', 'Nuts']
   },
@@ -63,7 +63,7 @@ const menuItemsData = [
     description: 'Crisp hand-cut calamari tossed in saffron salt, served with fresh garlic confit aioli and charred lemon wedges.',
     price: 26,
     category: 'Appetizers',
-    imageUrl: 'https://lh3.googleusercontent.com/aida/AP1WRLvyS5TOznW_SNp06M5Vb7jwMIBLQAVw24EXi2Zvy8dwzOW0iCqBqrYRKCfzouTuqRbVgj622FN87t57-u2xHY7gKYht7cqknuq-azBynAvoLSokQI8lxunrT8bRl1ZOxks-MrPpm-jYB7_63zFmeDCgp5-zOauzDHnFQ9tsLiX76ziV7SM2XioZQQ5sbXeXAYKPEAQCGK2D4z31j-TlQaaqd_4Hu1_l-XgY4y6d2b0EqUwJyT16Rfy0oa0',
+    imageUrl: 'https://images.unsplash.com/photo-1599487488170-d11ec9c172f0?auto=format&fit=crop&w=800&q=80',
     isChefSpecial: false,
     allergens: ['Contains Shellfish']
   },
@@ -72,7 +72,7 @@ const menuItemsData = [
     description: 'Decadent Valrhona dark chocolate cake with a molten center, served with Madagascan vanilla bean ice cream.',
     price: 18,
     category: 'Desserts',
-    imageUrl: 'https://lh3.googleusercontent.com/aida/AP1WRLv3mgwolov7v19ybw1WuOM8jUQJShyjDXlYznmdVhhs_pUMVefGrPnnFCW3Q0oWdAWPVuUxagILINVVBQehlHXfO15pxDVjh4vEiEK0hrkvE5Rh0R7vMcFOOnuzyw9XSdIEPWgU35XykbBmIJVEWAwQYJsLrxOd-odpMdenWXsyFUe183o_2U1DQ5M7RYkDgqKp4nvf1AqtZCV5oELQi2xwSz8-n_xVQzR6nGPwrWiI1HjtRE0pbo2JiWA',
+    imageUrl: 'https://images.unsplash.com/photo-1606313564200-e75d5e30476c?auto=format&fit=crop&w=800&q=80',
     isChefSpecial: false,
     allergens: ['Vegetarian']
   },
@@ -81,7 +81,7 @@ const menuItemsData = [
     description: 'Premium bourbon whiskey infused with orange peel and local honey, smoked tableside with white oak chips.',
     price: 22,
     category: 'Beverages',
-    imageUrl: 'https://lh3.googleusercontent.com/aida/AP1WRLuIimpTFXpS8yHUX1RyqhNBaKDtDmS1rvMOW2n6nuQNWzyeTAE-odZKpCuMUZ_cieX0ro5Lv6fkv_m4UGjAKlWU4zeZK697TGj_4tj5hAa_G3ovBPqZgV4x5QkDMgxQdPzfWZd2f4NLSJXU1uTOH6Nyb86y9GAFeS8YM0AneZr0tpBmh_AcEQPIpU5532DIkG1wrN3AygHtd-l03XBCbD7Pbz9C1sEDpZBkPEKK3MxJ08VGC_i2NKypzDrj',
+    imageUrl: 'https://images.unsplash.com/photo-1514362545857-3bc16c4c7d1b?auto=format&fit=crop&w=800&q=80',
     isChefSpecial: false,
     allergens: ['Contains Alcohol']
   }

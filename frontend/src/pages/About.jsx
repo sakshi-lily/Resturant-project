@@ -12,7 +12,7 @@ export const About = () => {
         minHeight: '350px',
         display: 'flex',
         alignItems: 'center',
-        background: 'linear-gradient(rgba(10, 10, 9, 0.75), rgba(10, 10, 9, 0.95)), url("https://lh3.googleusercontent.com/aida/AP1WRLu5tg4HFBvcuCvNzJykLKF48XbfLY4H_HL1K3zjjTViSV2x_jOEoNt8Dun-hIyRAaX_rN1JJ_-frDw_NQQ7eKM8QLhzca0OWK2IrB09Gnv6ir34CGA_i7FwGuXmgQs5bSiI7kwWMF2W8-dbPUyBr-BA_wwZJXbRwgQBVoeDAV0DCH5qUd2NrsijZ-6Rc-gegGsSGD3MEyEw8dyP5NX3D8wHoVk1qihWH7Rk_tyQmedYnx8gWxH954QOtgw") no-repeat center center/cover',
+        background: 'linear-gradient(rgba(10, 10, 9, 0.75), rgba(10, 10, 9, 0.95)), url("https://images.unsplash.com/photo-1517248135467-4c7edcad34c4?auto=format&fit=crop&w=1600&q=80") no-repeat center center/cover',
         textAlign: 'center',
         paddingTop: '80px'
       }}>
@@ -54,7 +54,7 @@ export const About = () => {
                 border: '1px solid rgba(255,107,53,0.15)',
                 height: '400px'
               }}>
-                <img src="https://lh3.googleusercontent.com/aida/AP1WRLu5tg4HFBvcuCvNzJykLKF48XbfLY4H_HL1K3zjjTViSV2x_jOEoNt8Dun-hIyRAaX_rN1JJ_-frDw_NQQ7eKM8QLhzca0OWK2IrB09Gnv6ir34CGA_i7FwGuXmgQs5bSiI7kwWMF2W8-dbPUyBr-BA_wwZJXbRwgQBVoeDAV0DCH5qUd2NrsijZ-6Rc-gegGsSGD3MEyEw8dyP5NX3D8wHoVk1qihWH7Rk_tyQmedYnx8gWxH954QOtgw" alt="Atmospheric room" style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
+                <img src="https://images.unsplash.com/photo-1550966871-3ed3cdb5ed0c?auto=format&fit=crop&w=800&q=80" alt="Atmospheric room" style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
               </div>
               <div style={{
                 position: 'absolute',
@@ -86,7 +86,7 @@ export const About = () => {
             alignItems: 'center'
           }} className="about-chef">
             <div style={{ borderRadius: '16px', overflow: 'hidden', border: '1px solid rgba(255,107,53,0.15)', height: '420px' }}>
-              <img src="https://lh3.googleusercontent.com/aida/AP1WRLvyS5TOznW_SNp06M5Vb7jwMIBLQAVw24EXi2Zvy8dwzOW0iCqBqrYRKCfzouTuqRbVgj622FN87t57-u2xHY7gKYht7cqknuq-azBynAvoLSokQI8lxunrT8bRl1ZOxks-MrPpm-jYB7_63zFmeDCgp5-zOauzDHnFQ9tsLiX76ziV7SM2XioZQQ5sbXeXAYKPEAQCGK2D4z31j-TlQaaqd_4Hu1_l-XgY4y6d2b0EqUwJyT16Rfy0oa0" alt="Executive Chef Gordon Ramsay style plating" style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
+              <img src="https://images.unsplash.com/photo-1577219491135-ce391730fb2c?auto=format&fit=crop&w=800&q=80" alt="Executive Chef Gordon Sterling plating" style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
             </div>
             
             <div>
