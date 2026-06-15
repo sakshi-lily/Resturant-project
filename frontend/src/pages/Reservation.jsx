@@ -37,7 +37,8 @@ export const Reservation = () => {
       setFormData(prev => ({
         ...prev,
         name: user.name || '',
-        email: user.email || ''
+        email: user.email || '',
+        phone: user.phone || prev.phone
       }));
     }
   }, [user]);
@@ -100,10 +101,10 @@ export const Reservation = () => {
         showToast('Table reservation request sent successfully!', 'success');
         // Reset form
         setFormData({
-          name: '',
-          email: '',
-          phone: '',
-          date: '',
+          name: user?.name || '',
+          email: user?.email || '',
+          phone: user?.phone || '',
+          date: getTomorrowDateString(),
           time: '',
           guests: '2',
           seatingArea: 'Indoor Main Room'

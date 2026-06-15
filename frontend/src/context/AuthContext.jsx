@@ -66,7 +66,9 @@ export const AuthProvider = ({ children }) => {
           _id: data._id,
           name: data.name,
           email: data.email,
-          role: data.role
+          role: data.role,
+          phone: data.phone || '',
+          address: data.address || ''
         });
         showToast(`Welcome back, ${data.name}!`, 'success');
         return { success: true, role: data.role };
@@ -97,7 +99,9 @@ export const AuthProvider = ({ children }) => {
           _id: data._id,
           name: data.name,
           email: data.email,
-          role: data.role
+          role: data.role,
+          phone: data.phone || '',
+          address: data.address || ''
         });
         showToast('Account registered successfully!', 'success');
         return { success: true, role: data.role };

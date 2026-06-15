@@ -208,8 +208,8 @@ export const Reviews = () => {
         {formStatus === 'success' ? (
           <div style={{ textAlign: 'center', padding: '20px 0', display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '12px' }}>
             <CheckCircle size={48} style={{ color: '#4ADE80' }} />
-            <h4 style={{ color: '#FFF', fontSize: '18px' }}>Review Submitted Successfully</h4>
-            <p style={{ color: 'var(--color-text-muted)', fontSize: '14px' }}>Thank you! Your feedback has been published.</p>
+            <h4 style={{ color: '#FFF', fontSize: '18px' }}>Review Submitted</h4>
+            <p style={{ color: 'var(--color-text-muted)', fontSize: '14px' }}>Thank you! Your feedback has been submitted for moderation.</p>
           </div>
         ) : (
           <form onSubmit={handleSubmitReview} style={{ display: 'flex', flexDirection: 'column', gap: '16px' }}>

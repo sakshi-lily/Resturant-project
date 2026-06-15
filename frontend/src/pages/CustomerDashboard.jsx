@@ -16,6 +16,8 @@ export const CustomerDashboard = () => {
   // Forms
   const [profileForm, setProfileForm] = useState({
     name: user?.name || '',
+    phone: user?.phone || '',
+    address: user?.address || '',
     password: '',
     confirmPassword: ''
   });
@@ -26,6 +28,21 @@ export const CustomerDashboard = () => {
     comment: '',
     imageUrl: ''
   });
+
+  useEffect(() => {
+    if (user) {
+      setProfileForm(prev => ({
+        ...prev,
+        name: user.name || '',
+        phone: user.phone || '',
+        address: user.address || ''
+      }));
+      setReviewForm(prev => ({
+        ...prev,
+        name: user.name || ''
+      }));
+    }
+  }, [user]);
 
   const [submittingProfile, setSubmittingProfile] = useState(false);
   const [submittingReview, setSubmittingReview] = useState(false);
@@ -82,6 +99,8 @@ export const CustomerDashboard = () => {
         },
         body: JSON.stringify({
           name: profileForm.name,
+          phone: profileForm.phone,
+          address: profileForm.address,
           ...(profileForm.password && { password: profileForm.password })
         })
       });
@@ -433,6 +452,29 @@ export const CustomerDashboard = () => {
                           className="input-field"
                           value={user?.email || ''}
                           style={{ opacity: 0.5, cursor: 'not-allowed' }}
+                        />
+                      </div>
+
+                      <div>
+                        <label style={{ display: 'block', fontSize: '12px', color: 'var(--color-text-muted)', marginBottom: '8px', fontWeight: 600 }}>Phone Number</label>
+                        <input 
+                          type="tel" 
+                          placeholder="e.g. +1 (555) 000-0000"
+                          className="input-field"
+                          value={profileForm.phone}
+                          onChange={(e) => setProfileForm(prev => ({ ...prev, phone: e.target.value }))}
+                        />
+                      </div>
+
+                      <div>
+                        <label style={{ display: 'block', fontSize: '12px', color: 'var(--color-text-muted)', marginBottom: '8px', fontWeight: 600 }}>Delivery Address</label>
+                        <textarea 
+                          placeholder="e.g. 123 Culinary St, Suite 200, New York"
+                          rows="2"
+                          className="input-field"
+                          value={profileForm.address}
+                          onChange={(e) => setProfileForm(prev => ({ ...prev, address: e.target.value }))}
+                          style={{ resize: 'none' }}
                         />
                       </div>
 

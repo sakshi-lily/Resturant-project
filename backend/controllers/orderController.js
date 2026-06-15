@@ -9,6 +9,18 @@ export const createOrder = async (req, res) => {
       return res.status(400).json({ message: 'All order fields are required' });
     }
 
+    // Email check
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    if (!emailRegex.test(email)) {
+      return res.status(400).json({ message: 'Please provide a valid email address' });
+    }
+
+    // Total amount validation
+    const amountNum = Number(totalAmount);
+    if (isNaN(amountNum) || amountNum <= 0) {
+      return res.status(400).json({ message: 'Total amount must be a positive number' });
+    }
+
     if (global.dbFallback) {
       const newOrder = jsonDb.create('orders', {
         customerName,
@@ -16,7 +28,7 @@ export const createOrder = async (req, res) => {
         phone,
         deliveryAddress,
         items,
-        totalAmount: Number(totalAmount),
+        totalAmount: amountNum,
         status: 'Pending'
       });
       return res.status(201).json(newOrder);
@@ -29,7 +41,7 @@ export const createOrder = async (req, res) => {
       phone,
       deliveryAddress,
       items,
-      totalAmount
+      totalAmount: amountNum
     });
 
     await newOrder.save();

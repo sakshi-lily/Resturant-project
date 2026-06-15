@@ -17,10 +17,49 @@ export const getReservations = async (req, res) => {
 export const createReservation = async (req, res) => {
   try {
     const { name, email, phone, date, time, guests, seatingArea } = req.body;
+
+    if (!name || !email || !phone || !date || !time || !guests || !seatingArea) {
+      return res.status(400).json({ message: 'All fields are required' });
+    }
+
+    // Email check
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    if (!emailRegex.test(email)) {
+      return res.status(400).json({ message: 'Please provide a valid email address' });
+    }
+
+    // Guest count check
+    const guestsNum = Number(guests);
+    if (isNaN(guestsNum) || guestsNum <= 0) {
+      return res.status(400).json({ message: 'Number of guests must be a positive number' });
+    }
+
+    // Date check
+    if (isNaN(Date.parse(date))) {
+      return res.status(400).json({ message: 'Please provide a valid date' });
+    }
+    
+    const reservationDate = new Date(date);
+    const today = new Date();
+    today.setHours(0, 0, 0, 0);
+    if (reservationDate < today) {
+      return res.status(400).json({ message: 'Reservation date cannot be in the past' });
+    }
+
     if (global.dbFallback) {
-      const newBooking = jsonDb.create('reservations', { name, email, phone, date: new Date(date).toISOString(), time, guests: Number(guests), seatingArea, status: 'Pending' });
+      const newBooking = jsonDb.create('reservations', {
+        name,
+        email,
+        phone,
+        date: reservationDate.toISOString(),
+        time,
+        guests: guestsNum,
+        seatingArea,
+        status: 'Pending'
+      });
       return res.status(201).json(newBooking);
     }
+
     const newBooking = new Reservation({ name, email, phone, date, time, guests, seatingArea });
     await newBooking.save();
     res.status(201).json(newBooking);

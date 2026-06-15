@@ -36,7 +36,9 @@ export const registerUser = async (req, res) => {
         name,
         email: emailNormalized,
         password: hashedPassword,
-        role: 'user'
+        role: 'user',
+        phone: req.body.phone || '',
+        address: req.body.address || ''
       });
 
       return res.status(201).json({
@@ -44,6 +46,8 @@ export const registerUser = async (req, res) => {
         name: newUser.name,
         email: newUser.email,
         role: newUser.role,
+        phone: newUser.phone || '',
+        address: newUser.address || '',
         token: generateToken(newUser._id)
       });
     }
@@ -58,7 +62,9 @@ export const registerUser = async (req, res) => {
       name,
       email: emailNormalized,
       password,
-      role: 'user'
+      role: 'user',
+      phone: req.body.phone || '',
+      address: req.body.address || ''
     });
 
     res.status(201).json({
@@ -66,6 +72,8 @@ export const registerUser = async (req, res) => {
       name: user.name,
       email: user.email,
       role: user.role,
+      phone: user.phone || '',
+      address: user.address || '',
       token: generateToken(user._id)
     });
   } catch (error) {
@@ -93,6 +101,8 @@ export const loginUser = async (req, res) => {
           name: user.name,
           email: user.email,
           role: user.role,
+          phone: user.phone || '',
+          address: user.address || '',
           token: generateToken(user._id)
         });
       } else {
@@ -109,6 +119,8 @@ export const loginUser = async (req, res) => {
         name: user.name,
         email: user.email,
         role: user.role,
+        phone: user.phone || '',
+        address: user.address || '',
         token: generateToken(user._id)
       });
     } else {
@@ -127,7 +139,9 @@ export const getUserProfile = async (req, res) => {
         _id: req.user._id,
         name: req.user.name,
         email: req.user.email,
-        role: req.user.role
+        role: req.user.role,
+        phone: req.user.phone || '',
+        address: req.user.address || ''
       });
     } else {
       res.status(404).json({ message: 'User not found' });
@@ -139,11 +153,13 @@ export const getUserProfile = async (req, res) => {
 
 export const updateUserProfile = async (req, res) => {
   try {
-    const { name, password } = req.body;
+    const { name, password, phone, address } = req.body;
     
     if (global.dbFallback) {
       const updateData = {};
       if (name) updateData.name = name;
+      if (phone !== undefined) updateData.phone = phone;
+      if (address !== undefined) updateData.address = address;
       if (password) {
         const salt = await bcrypt.genSalt(10);
         updateData.password = await bcrypt.hash(password, salt);
@@ -157,7 +173,9 @@ export const updateUserProfile = async (req, res) => {
         _id: updatedUser._id,
         name: updatedUser.name,
         email: updatedUser.email,
-        role: updatedUser.role
+        role: updatedUser.role,
+        phone: updatedUser.phone || '',
+        address: updatedUser.address || ''
       });
     }
 
@@ -168,6 +186,8 @@ export const updateUserProfile = async (req, res) => {
     }
 
     if (name) user.name = name;
+    if (phone !== undefined) user.phone = phone;
+    if (address !== undefined) user.address = address;
     if (password) user.password = password; // mongoose pre-save hook will hash this
 
     const updatedUser = await user.save();
@@ -175,7 +195,9 @@ export const updateUserProfile = async (req, res) => {
       _id: updatedUser._id,
       name: updatedUser.name,
       email: updatedUser.email,
-      role: updatedUser.role
+      role: updatedUser.role,
+      phone: updatedUser.phone || '',
+      address: updatedUser.address || ''
     });
   } catch (error) {
     res.status(400).json({ message: error.message });

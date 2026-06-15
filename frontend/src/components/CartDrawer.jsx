@@ -31,7 +31,9 @@ export const CartDrawer = () => {
       setFormData(prev => ({
         ...prev,
         name: user.name || '',
-        email: user.email || ''
+        email: user.email || '',
+        phone: user.phone || prev.phone,
+        address: user.address || prev.address
       }));
     }
   }, [user, step]);
