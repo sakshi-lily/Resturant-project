@@ -216,8 +216,8 @@ export const Contact = () => {
 
                 <button
                   type="submit"
-                  className="btn btn-primary"
-                  style={{ width: '100%', padding: '15px', marginTop: '10px' }}
+                  className="btn btn-primary btn-md btn-block"
+                  style={{ marginTop: '10px' }}
                   disabled={formStatus === 'loading'}
                 >
                   {formStatus === 'loading' ? 'Transmitting message...' : 'Send Message'}

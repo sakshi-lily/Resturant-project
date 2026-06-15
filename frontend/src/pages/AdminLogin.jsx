@@ -140,9 +140,9 @@ export const AdminLogin = () => {
 
             <button
               type="submit"
-              className="btn btn-gold"
+              className="btn btn-gold btn-md btn-block"
               disabled={submitting}
-              style={{ width: '100%', padding: '14px', marginTop: '10px', display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '8px' }}
+              style={{ marginTop: '10px', display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '8px' }}
             >
               {submitting ? 'Verifying Admin...' : 'Authenticate'}
               <ArrowRight size={16} />

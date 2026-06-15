@@ -314,8 +314,7 @@ export const Reservation = () => {
             <div>
               <button
                 type="submit"
-                className="btn btn-primary"
-                style={{ width: '100%', padding: '16px' }}
+                className="btn btn-primary btn-md btn-block"
                 disabled={bookingStatus === 'loading'}
               >
                 {bookingStatus === 'loading' ? 'Verifying table availability...' : 'Confirm Reservation Request'}
@@ -419,8 +418,8 @@ export const Reservation = () => {
             </div>
             <button
               onClick={() => setBookingStatus('idle')}
-              className="btn btn-primary"
-              style={{ width: '100%', marginTop: '20px' }}
+              className="btn btn-primary btn-md btn-block"
+              style={{ marginTop: '20px' }}
             >
               Close Summary
             </button>

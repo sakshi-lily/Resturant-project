@@ -415,8 +415,8 @@ export const CustomerDashboard = () => {
                       <button
                         type="submit"
                         disabled={submittingReview}
-                        className="btn btn-primary"
-                        style={{ width: 'fit-content', padding: '12px 30px', marginTop: '10px' }}
+                        className="btn btn-primary btn-md"
+                        style={{ width: 'fit-content', marginTop: '10px' }}
                       >
                         {submittingReview ? 'Submitting review...' : 'Submit Verified Testimonial'}
                       </button>
@@ -451,7 +451,6 @@ export const CustomerDashboard = () => {
                           disabled
                           className="input-field"
                           value={user?.email || ''}
-                          style={{ opacity: 0.5, cursor: 'not-allowed' }}
                         />
                       </div>
 
@@ -504,8 +503,8 @@ export const CustomerDashboard = () => {
                       <button
                         type="submit"
                         disabled={submittingProfile}
-                        className="btn btn-primary"
-                        style={{ width: 'fit-content', padding: '12px 30px', marginTop: '10px' }}
+                        className="btn btn-primary btn-md"
+                        style={{ width: 'fit-content', marginTop: '10px' }}
                       >
                         {submittingProfile ? 'Saving updates...' : 'Save Settings'}
                       </button>

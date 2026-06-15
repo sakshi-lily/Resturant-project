@@ -154,27 +154,27 @@ export const Navbar = () => {
             <>
               {user.role === 'admin' ? (
                 <>
-                  <Link to="/admin" className="btn btn-secondary" style={{ padding: '8px 12px', fontSize: '12px', display: 'flex', alignItems: 'center', gap: '4px' }}>
+                  <Link to="/admin" className="btn btn-secondary btn-sm" style={{ display: 'flex', alignItems: 'center', gap: '4px' }}>
                     <ShieldAlert size={14} style={{ color: 'var(--color-primary)' }} />
                     <span>Admin Panel</span>
                   </Link>
                 </>
               ) : (
-                <Link to="/dashboard" className="btn btn-secondary" style={{ padding: '8px 12px', fontSize: '12px', display: 'flex', alignItems: 'center', gap: '4px' }}>
+                <Link to="/dashboard" className="btn btn-secondary btn-sm" style={{ display: 'flex', alignItems: 'center', gap: '4px' }}>
                   <User size={14} style={{ color: 'var(--color-primary)' }} />
                   <span>My Dashboard</span>
                 </Link>
               )}
-              <button onClick={logout} className="btn btn-secondary" style={{ padding: '8px 12px', fontSize: '12px', cursor: 'pointer', background: 'transparent', border: '1px solid rgba(255,255,255,0.1)', color: '#FFF' }}>
+              <button onClick={logout} className="btn btn-secondary btn-sm" style={{ cursor: 'pointer', background: 'transparent', border: '1px solid rgba(255,255,255,0.1)', color: '#FFF' }}>
                 Sign Out
               </button>
             </>
           ) : (
-            <Link to="/login" className="btn btn-secondary" style={{ padding: '8px 16px', fontSize: '13px' }}>
+            <Link to="/login" className="btn btn-secondary btn-sm">
               Sign In
             </Link>
           )}
-          <Link to="/reservation" className="btn btn-primary" style={{ padding: '10px 20px', fontSize: '13px' }}>
+          <Link to="/reservation" className="btn btn-primary btn-md">
             Book a Table
           </Link>
         </div>
@@ -242,10 +242,10 @@ export const Navbar = () => {
       {isOpen && (
         <div style={{
           position: 'fixed',
-          top: '60px',
+          top: scrolled ? '64px' : '80px',
           left: 0,
           width: '100%',
-          height: 'calc(100vh - 60px)',
+          height: scrolled ? 'calc(100vh - 64px)' : 'calc(100vh - 80px)',
           background: 'rgba(10, 10, 9, 0.98)',
           backdropFilter: 'blur(20px)',
           padding: '40px 24px',
@@ -276,25 +276,25 @@ export const Navbar = () => {
               <>
                 {user.role === 'admin' ? (
                   <>
-                    <Link to="/admin" onClick={() => setIsOpen(false)} className="btn btn-secondary" style={{ width: '100%' }}>
+                    <Link to="/admin" onClick={() => setIsOpen(false)} className="btn btn-secondary btn-md btn-block">
                       Admin Panel
                     </Link>
                   </>
                 ) : (
-                  <Link to="/dashboard" onClick={() => setIsOpen(false)} className="btn btn-secondary" style={{ width: '100%' }}>
+                  <Link to="/dashboard" onClick={() => setIsOpen(false)} className="btn btn-secondary btn-md btn-block">
                     My Dashboard
                   </Link>
                 )}
-                <button onClick={() => { logout(); setIsOpen(false); }} className="btn btn-secondary" style={{ width: '100%', cursor: 'pointer', background: 'transparent', border: '1px solid rgba(255,255,255,0.1)', color: '#FFF', padding: '10px' }}>
+                <button onClick={() => { logout(); setIsOpen(false); }} className="btn btn-secondary btn-md btn-block" style={{ cursor: 'pointer', background: 'transparent', border: '1px solid rgba(255,255,255,0.1)', color: '#FFF' }}>
                   Sign Out
                 </button>
               </>
             ) : (
-              <Link to="/login" onClick={() => setIsOpen(false)} className="btn btn-secondary" style={{ width: '100%' }}>
+              <Link to="/login" onClick={() => setIsOpen(false)} className="btn btn-secondary btn-md btn-block">
                 Sign In
               </Link>
             )}
-            <Link to="/reservation" onClick={() => setIsOpen(false)} className="btn btn-primary" style={{ width: '100%' }}>
+            <Link to="/reservation" onClick={() => setIsOpen(false)} className="btn btn-primary btn-md btn-block">
               Book a Table
             </Link>
           </div>

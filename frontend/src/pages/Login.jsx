@@ -128,9 +128,9 @@ export const Login = () => {
 
             <button
               type="submit"
-              className="btn btn-primary"
+              className="btn btn-primary btn-md btn-block"
               disabled={submitting}
-              style={{ width: '100%', padding: '14px', marginTop: '10px', display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '8px' }}
+              style={{ marginTop: '10px', display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '8px' }}
             >
               {submitting ? 'Verifying profile...' : 'Sign In Now'}
               <ArrowRight size={16} />

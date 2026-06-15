@@ -271,8 +271,8 @@ export const Reviews = () => {
 
             <button
               type="submit"
-              className="btn btn-primary"
-              style={{ width: '100%', marginTop: '10px' }}
+              className="btn btn-primary btn-md btn-block"
+              style={{ marginTop: '10px' }}
               disabled={formStatus === 'loading'}
             >
               {formStatus === 'loading' ? 'Publishing experience...' : 'Publish Experience'}

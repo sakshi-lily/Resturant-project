@@ -269,8 +269,8 @@ export const CartDrawer = () => {
                 </div>
                 <button 
                   onClick={() => setStep(2)}
-                  className="btn btn-primary"
-                  style={{ width: '100%', padding: '14px', display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '8px' }}
+                  className="btn btn-primary btn-md btn-block"
+                  style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '8px' }}
                 >
                   Proceed to Checkout <ArrowRight size={16} />
                 </button>
@@ -362,15 +362,13 @@ export const CartDrawer = () => {
                 <button 
                   type="button" 
                   onClick={() => setStep(1)} 
-                  className="btn btn-secondary"
-                  style={{ padding: '14px' }}
+                  className="btn btn-secondary btn-md"
                 >
                   Back
                 </button>
                 <button 
                   type="submit" 
-                  className="btn btn-primary"
-                  style={{ padding: '14px' }}
+                  className="btn btn-primary btn-md"
                   disabled={loading}
                 >
                   {loading ? 'Processing...' : 'Place COD Order'}
@@ -410,8 +408,8 @@ export const CartDrawer = () => {
 
             <button 
               onClick={handleClose} 
-              className="btn btn-primary" 
-              style={{ width: '100%', padding: '14px', marginTop: '20px' }}
+              className="btn btn-primary btn-md btn-block"
+              style={{ marginTop: '20px' }}
             >
               Close Cart
             </button>

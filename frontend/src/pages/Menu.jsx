@@ -136,8 +136,8 @@ export const Menu = () => {
                       </span>
                       <button
                         onClick={() => addToCart(item)}
-                        className="btn btn-primary"
-                        style={{ padding: '6px 12px', fontSize: '11px', borderRadius: '6px' }}
+                        className="btn btn-primary btn-sm"
+                        style={{ borderRadius: '6px' }}
                       >
                         Add to Cart
                       </button>
@@ -265,8 +265,8 @@ export const Menu = () => {
                       </div>
                       <button
                         onClick={() => addToCart(item)}
-                        className="btn btn-primary"
-                        style={{ padding: '6px 12px', fontSize: '11px', borderRadius: '6px' }}
+                        className="btn btn-primary btn-sm"
+                        style={{ borderRadius: '6px' }}
                       >
                         Add to Cart
                       </button>
